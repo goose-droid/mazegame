@@ -73,37 +73,76 @@ let currentRoomType = roomTypes[rooms[y][x]]; //needs to be updated every time x
     let roomTypeIndex = rooms[y][x];
     return roomTypes[rooms[y][x]];
 }*/
+
 //function for displaying coordinates and roomtype
 function displayRoomData() { 
     text.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
 };
 
+//function for disabling and enabling buttons according to room type
+function manageButtons() {
+    if (Number(currentRoomType[0])) {
+        ButtonNorth.removeAttribute("disabled");
+    } else {
+        ButtonNorth.setAttribute("disabled", "disabled");
+    }
+    if (Number(currentRoomType[1])) {
+        ButtonSouth.removeAttribute("disabled");
+    } else {
+        ButtonSouth.setAttribute("disabled", "disabled");
+    }
+    if (Number(currentRoomType[2])) {
+        ButtonEast.removeAttribute("disabled");
+    } else {
+        ButtonEast.setAttribute("disabled", "disabled");
+    }
+    if(Number(currentRoomType[3])) {
+        ButtonWest.removeAttribute("disabled");
+    } else {
+        ButtonWest.setAttribute("disabled", "disabled");
+    }
+}
+
+//function for updating coordinates, current room type, and buttons on movement
+function updatePosition(direction) {
+    switch(direction) {
+        case "n":
+            y++;
+            break;
+        case "s":
+            y--;
+            break;
+        case "e":
+            x++;
+            break;
+        case "w":
+            x--;
+            break;
+    }
+    currentRoomType = roomTypes[rooms[y][x]];
+    displayRoomData();
+    manageButtons();
+}
 
 
-//show starting coordinates and figure starting roomtype
+//show starting coordinates and roomtype, then manage buttons
 displayRoomData();
+manageButtons();
 
 //movement upon directional button click
 ButtonNorth.addEventListener("click", () => {
-    y++;
-    currentRoomType = roomTypes[rooms[y][x]];
-    displayRoomData();
+    updatePosition("n");
 })
 ButtonSouth.addEventListener("click", () => {
-    y--;
-    currentRoomType = roomTypes[rooms[y][x]];
-    displayRoomData();
+    updatePosition("s");
 })
 ButtonEast.addEventListener("click", () => {
-    x++;
-    currentRoomType = roomTypes[rooms[y][x]];
-    displayRoomData();
+    updatePosition("e");
 })
 ButtonWest.addEventListener("click", () => {
-    x--;
-    currentRoomType = roomTypes[rooms[y][x]];
-    displayRoomData();
+    updatePosition("w");
 })
+
 
 
 
