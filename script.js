@@ -38,7 +38,8 @@ const ButtonEast = document.querySelector("#ButtonEast");
 const ButtonWest = document.querySelector("#ButtonWest");
 
 //text
-const text = document.querySelector("#description");
+const roomstats = document.querySelector("#roomstats");
+const text = document.querySelector("#text");
 
 //types of rooms (4 directions where each may be passable or not, order NSEW)
 const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
@@ -62,11 +63,14 @@ const keys = [
 
 //location of treasure box. format [x,y]
 const treasureBox = [7, 3];
+//number of keys to open box
+const boxKeys = 2;
 
 //starting coordinates & room type
 let x = 0;
 let y = 3;
 let currentRoomType = roomTypes[rooms[y][x]]; //needs to be updated every time x or y is.
+let numberOfKeys = 0;
 
 //function for determining room type from coordinates
 /*function findRoomType() {
@@ -76,7 +80,7 @@ let currentRoomType = roomTypes[rooms[y][x]]; //needs to be updated every time x
 
 //function for displaying coordinates and roomtype
 function displayRoomData() { 
-    text.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
+    roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
 };
 
 //function for disabling and enabling buttons according to room type
@@ -103,6 +107,32 @@ function manageButtons() {
     }
 }
 
+//function that runs upon finding key
+function foundKey() {
+    text.innerHTML = "<p>You found a key!<p>";
+    numberOfKeys++;
+    text.innerHTML += `<p>You now have ${numberOfKeys} keys.`;
+}
+
+//function that runs upon finding chest
+function foundChest() {
+    text.innerHTML = "<p>You found the treasure chest!<p>";
+    if (numberOfKeys < boxKeys) {
+        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
+    } else {
+        text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats!`;
+    }
+}
+
+//function to check for key
+function checkKey() {
+    keys.forEach((location) => {
+        if (x == location[0] && y == location[1]) {
+            foundKey();
+        }
+    } )     
+}
+
 //function for updating coordinates, current room type, and buttons on movement
 function updatePosition(direction) {
     switch(direction) {
@@ -121,6 +151,12 @@ function updatePosition(direction) {
     }
     currentRoomType = roomTypes[rooms[y][x]];
     displayRoomData();
+    text.innerHTML = "";
+    //check for keys and box
+    checkKey();
+    if (x == treasureBox[0] && y == treasureBox[1]) {
+        foundChest();
+    }
     manageButtons();
 }
 
@@ -142,8 +178,5 @@ ButtonEast.addEventListener("click", () => {
 ButtonWest.addEventListener("click", () => {
     updatePosition("w");
 })
-
-
-
 
 
