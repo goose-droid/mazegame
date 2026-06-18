@@ -43,12 +43,12 @@ const text = document.querySelector("#description");
 //types of rooms (4 directions where each may be passable or not, order NSEW)
 const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
 
-//the "maze". the index of the outer array is 7. the index of each inner array is x. mirrored up/down visually compared to maze as drawn to avoid using negatives in y axis. the content of the inner arrays is the room type, which refers to the index of the roomTypes array.
+//the "maze". the index of the outer array is y. the index of each inner array is x. mirrored up/down "visually" compared to maze as drawn to avoid using negatives in y axis. the content of the inner arrays is the room type, which refers to the index of the roomTypes array. it's a little awkward that the order for accessing this value is [y][x] and not [x][y], but inputing the values the other way around from the drawn maze would be more error-prone, since it would be rotated 45 degrees.
 const rooms = [
-    [0, 11, 8, 8, 12, 8, 8, 9],
+    [0, 11, 8, 8, 14, 8, 8, 9],
     [0, 6, 0, 0, 6, 0, 0, 6],
     [0, 6, 0, 0, 6, 0, 0, 6],
-    [5, 1, 8, 8, 1, 8, 8, 15],
+    [4, 1, 8, 8, 1, 8, 8, 15],
     [0, 6, 0, 0, 6, 0, 0, 6],
     [0, 6, 0, 0, 6, 0, 0, 6],
     [0, 7, 8, 8, 13, 8, 8, 10]
@@ -60,34 +60,49 @@ const keys = [
     [5, 6]
 ];
 
-
-
 //location of treasure box. format [x,y]
 const treasureBox = [7, 3];
 
-//starting coordinates
+//starting coordinates & room type
 let x = 0;
 let y = 3;
+let currentRoomType = roomTypes[rooms[y][x]]; //needs to be updated every time x or y is.
 
-//show starting coordinates
-text.innerHTML = `<p>Coordinates: ${x}, ${y}</p>`;
+//function for determining room type from coordinates
+/*function findRoomType() {
+    let roomTypeIndex = rooms[y][x];
+    return roomTypes[rooms[y][x]];
+}*/
+//function for displaying coordinates and roomtype
+function displayRoomData() { 
+    text.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
+};
+
+
+
+//show starting coordinates and figure starting roomtype
+displayRoomData();
 
 //movement upon directional button click
 ButtonNorth.addEventListener("click", () => {
     y++;
-    text.innerHTML = `<p>Coordinates: ${x}, ${y}</p>`;
+    currentRoomType = roomTypes[rooms[y][x]];
+    displayRoomData();
 })
 ButtonSouth.addEventListener("click", () => {
     y--;
-    text.innerHTML = `<p>Coordinates: ${x}, ${y}</p>`;
+    currentRoomType = roomTypes[rooms[y][x]];
+    displayRoomData();
 })
 ButtonEast.addEventListener("click", () => {
     x++;
-    text.innerHTML = `<p>Coordinates: ${x}, ${y}</p>`;
+    currentRoomType = roomTypes[rooms[y][x]];
+    displayRoomData();
 })
 ButtonWest.addEventListener("click", () => {
     x--;
-    text.innerHTML = `<p>Coordinates: ${x}, ${y}</p>`;
+    currentRoomType = roomTypes[rooms[y][x]];
+    displayRoomData();
 })
 
 
