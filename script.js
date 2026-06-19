@@ -6,6 +6,15 @@ const ButtonSouth = document.querySelector("#ButtonSouth");
 const ButtonEast = document.querySelector("#ButtonEast");
 const ButtonWest = document.querySelector("#ButtonWest");
 
+//directional tiles in map graphic
+const northTile = document.querySelector("#north-tile");
+const southTile = document.querySelector("#south-tile");
+const eastTile = document.querySelector("#east-tile");
+const westTile = document.querySelector("#west-tile");
+
+//object img in map graphic
+const objectImage = document.querySelector("#object-image");
+
 //text
 const roomstats = document.querySelector("#roomstats");
 const text = document.querySelector("#text");
@@ -74,34 +83,45 @@ function displayRoomData() {
     roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
 };
 
-//function for disabling and enabling buttons according to room type
+// function for disabling and enabling buttons
+// and changing the map graphic according to room type
 //conditions slice a specific character from the roomtype string and 
 // convert it to a nubmer to make it truthy / falsey
 function manageButtons() {
     if (Number(currentRoomType[0])) {
         ButtonNorth.removeAttribute("disabled");
+        northTile.classList.remove("wall");
     } else {
         ButtonNorth.setAttribute("disabled", "disabled");
+        northTile.classList.add("wall");
     }
     if (Number(currentRoomType[1])) {
         ButtonSouth.removeAttribute("disabled");
+        southTile.classList.remove("wall");
     } else {
         ButtonSouth.setAttribute("disabled", "disabled");
+        southTile.classList.add("wall");
     }
     if (Number(currentRoomType[2])) {
         ButtonEast.removeAttribute("disabled");
+        eastTile.classList.remove("wall");
     } else {
         ButtonEast.setAttribute("disabled", "disabled");
+        eastTile.classList.add("wall");
     }
     if(Number(currentRoomType[3])) {
         ButtonWest.removeAttribute("disabled");
+        westTile.classList.remove("wall");
     } else {
         ButtonWest.setAttribute("disabled", "disabled");
+        westTile.classList.add("wall");
     }
 }
 
 //function that runs upon finding key
 function foundKey() {
+    objectImage.src = "key.png";
+    objectImage.style.display = "block";
     text.innerHTML = "<p>You found a key!<p>";
     numberOfKeys++;
     text.innerHTML += `<p>You now have ${numberOfKeys} keys.`;
@@ -109,6 +129,8 @@ function foundKey() {
 
 //function that runs upon finding chest
 function foundChest() {
+    objectImage.src = "chest.png";
+    objectImage.style.display = "block";
     text.innerHTML = "<p>You found the treasure chest!<p>";
     if (numberOfKeys < boxKeys) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
@@ -134,6 +156,7 @@ function checkKey() {
 //function for updating coordinates, current room type, keys/chest, and buttons on movement
 //this is the main function where most stuff happens
 function updatePosition(direction) {
+    objectImage.style.display = "none";
     switch(direction) {
         case "n":
             y++;

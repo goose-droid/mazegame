@@ -1,9 +1,8 @@
 body {
-    text-align: center;
+    margin-left: 25px;
 }
 
 .directional-buttons {
-    text-align: center;
     button {
         height: 25px;
         width: 25px;
@@ -15,4 +14,33 @@ body {
         margin: 0px;
         display: inline-block;
     }
+    #ButtonNorth, #ButtonSouth {
+        margin-left:25px;
+    }
+}
+
+#grid {
+    padding: 10px;
+    margin: 0px;
+    display: grid;
+    grid-template-columns: 30px 30px 30px;
+    .tile {
+        background-image: url("floor.png");
+        padding: 0px;
+        margin: 0px;
+        width: 30px;
+        height: 30px;
+        #object-image {
+            margin:0px;
+            padding: 0px;
+            display: none;
+        }
+    }
+    .corner-tile {
+        background-image: url("brick.png");
+    }
+    .wall {
+        background-image: url("brick.png");
+    }
+    
 }
