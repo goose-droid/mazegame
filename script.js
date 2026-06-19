@@ -30,7 +30,6 @@ const text = document.querySelector("#text");
 // [y][x] and not [x][y], but inputing the values that way from the drawn
 //  maze would be more error-prone, since it would be rotated 45 degrees and harder to
 // keep track of in my head
-// may change this eventually to be [x][y] and "right side up" 
 const rooms = [
     [0, 11, 8, 8, 14, 8, 8, 9],
     [0, 6, 0, 0, 6, 0, 0, 6],
@@ -190,10 +189,10 @@ function updatePosition(direction) {
     text.innerHTML = "";
     //check for keys and box
     checkKey();
+    manageButtons();
     if (x == treasureBox[0] && y == treasureBox[1]) {
         foundChest();
     }
-    manageButtons();
 }
 
 //show starting coordinates and roomtype, then manage buttons
