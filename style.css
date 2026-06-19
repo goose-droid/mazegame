@@ -1,0 +1,18 @@
+body {
+    text-align: center;
+}
+
+.directional-buttons {
+    text-align: center;
+    button {
+        height: 25px;
+        width: 25px;
+        margin: 0px;
+    }
+    .center-square {
+        height: 0px;
+        width: 25px;
+        margin: 0px;
+        display: inline-block;
+    }
+}

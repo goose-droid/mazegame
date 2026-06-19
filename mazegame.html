@@ -2,17 +2,17 @@
 <html>
     <head>
         <title>Maze Game</title>
+        <link href="style.css" rel="stylesheet" />
     </head>
     <body>
-        
         <h1>Maze Game</h1>
+        <p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move.</p>
         <div id="roomstats"></div>
         <div id="text"></div>
-        <div class="buttons">
-            <button id="ButtonNorth">North</button>
-            <button id="ButtonSouth">South</button>
-            <button id="ButtonEast">East</button>
-            <button id="ButtonWest">West</button>
+        <div class="directional-buttons">
+            <button id="ButtonNorth">↑</button><br>
+            <button id="ButtonWest">←</button><div class="center-square"></div><button id="ButtonEast">→</button><br>
+            <button id="ButtonSouth">↓</button>
         </div>
         <script src="script.js"></script>
     </body>

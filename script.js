@@ -1,35 +1,4 @@
-//room class
-/*class Room {
-
-    //fields
-    roomId;
-    north;
-    south;
-    east;
-    west;
-
-    //contsructor
-    constructor(roomId, north, south, east, west) {
-        this.roomId = roomId;
-        this.north = north;
-        this.south = south;
-        this.east = east;
-        this.west = west;
-    }
-
-}
-
-//initializing the rooms
-
-
-//variables
-let currentRoom;
-let targetRoom;
-let northRoom;
-let southRoom;
-let eastRoom;
-let westRoom;
-*/
+///*** creating constants for document elements */
 
 //directional buttons
 const ButtonNorth = document.querySelector("#ButtonNorth");
@@ -41,13 +10,18 @@ const ButtonWest = document.querySelector("#ButtonWest");
 const roomstats = document.querySelector("#roomstats");
 const text = document.querySelector("#text");
 
-//types of rooms (4 directions where each may be passable or not, order NSEW)
-const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
-
 // **** the following section is what is changed in order to change the maze layout ******
-// these things maybe moved to a class later
+// these things may be moved to a Maze class later
 
-//the "maze". the index of the outer array is y. the index of each inner array is x. mirrored up/down "visually" compared to maze as drawn to avoid using negatives in y axis. the content of the inner arrays is the room type, which refers to the index of the roomTypes array. it's a little awkward that the order for accessing this value is [y][x] and not [x][y], but inputing the values the other way around from the drawn maze would be more error-prone, since it would be rotated 45 degrees.
+// the "maze". the index of the outer array is y. the index of each inner array is x. 
+// mirrored up/down "visually" compared to maze as drawn to use first quadrant, which is 
+// easier to visualize when assigning coordinates. 
+// the content of the inner arrays is the room type, which refers to the index of the
+// roomTypes array (below). it's a little awkward that the order for accessing this value is
+// [y][x] and not [x][y], but inputing the values that way from the drawn
+//  maze would be more error-prone, since it would be rotated 45 degrees and harder to
+// keep track of in my head
+// may change this eventually to be [x][y] and "right side up" 
 const rooms = [
     [0, 11, 8, 8, 14, 8, 8, 9],
     [0, 6, 0, 0, 6, 0, 0, 6],
@@ -58,7 +32,7 @@ const rooms = [
     [0, 7, 8, 8, 13, 8, 8, 10]
 ];
 
-//location of keys. the inner arrays are in format [x, y] for location on grid
+//location of keys. the inner arrays are in format [x, y]
 const keys = [
     [3, 0],
     [5, 6]
@@ -72,6 +46,10 @@ const startingx = 0;
 const startingy = 3;
 
 // ****** end of maze-defining section *****
+
+//types of rooms (4 directions where each may be passable or not, order NSEW)
+//using 1s and 0s to make conditional statements easier later
+const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
 
 //generate flags for finding keys
 const keyFlags = [];
@@ -91,11 +69,14 @@ let currentRoomType = roomTypes[rooms[y][x]];
 let numberOfKeys = 0;
 
 //function for displaying coordinates and roomtype
+//for testing
 function displayRoomData() { 
     roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
 };
 
 //function for disabling and enabling buttons according to room type
+//conditions slice a specific character from the roomtype string and 
+// convert it to a nubmer to make it truthy / falsey
 function manageButtons() {
     if (Number(currentRoomType[0])) {
         ButtonNorth.removeAttribute("disabled");
@@ -140,6 +121,7 @@ function foundChest() {
 function checkKey() {
     keys.forEach((location, i) => {
         if (x == location[0] && y == location[1]) {
+            //check if key was already picked up
             if (keyFlags[i]) {
                 keyFlags[i] = 0
                 foundKey();
@@ -149,7 +131,8 @@ function checkKey() {
     } )     
 }
 
-//function for updating coordinates, current room type, and buttons on movement
+//function for updating coordinates, current room type, keys/chest, and buttons on movement
+//this is the main function where most stuff happens
 function updatePosition(direction) {
     switch(direction) {
         case "n":
@@ -167,6 +150,7 @@ function updatePosition(direction) {
     }
     currentRoomType = roomTypes[rooms[y][x]];
     displayRoomData();
+    //clear textbox
     text.innerHTML = "";
     //check for keys and box
     checkKey();
@@ -175,7 +159,6 @@ function updatePosition(direction) {
     }
     manageButtons();
 }
-
 
 //show starting coordinates and roomtype, then manage buttons
 displayRoomData();
