@@ -49,9 +49,8 @@ const keys = [
 //location of treasure box. format [x,y]
 const treasureBox = [7, 3];
 
-//starting location
-const startingx = 0;
-const startingy = 3;
+//starting location. format [x, y]
+const startingPosition = [0, 3];
 
 // ****** end of maze-defining section *****
 
@@ -73,8 +72,8 @@ const boxKeys = keys.length;
 
 //starting coordinates & room type
 //needs to be redone when game restarted
-let x = startingx;
-let y = startingy;
+let x = startingPosition[0];
+let y = startingPosition[1];
 //currentroomtype needs to be updated every time x or y is
 let currentRoomType = roomTypes[rooms[y][x]]; 
 let numberOfKeys = 0;
