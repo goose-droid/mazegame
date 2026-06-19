@@ -44,6 +44,9 @@ const text = document.querySelector("#text");
 //types of rooms (4 directions where each may be passable or not, order NSEW)
 const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
 
+// **** the following section is what is changed in order to change the maze layout ******
+// these things maybe moved to a class later
+
 //the "maze". the index of the outer array is y. the index of each inner array is x. mirrored up/down "visually" compared to maze as drawn to avoid using negatives in y axis. the content of the inner arrays is the room type, which refers to the index of the roomTypes array. it's a little awkward that the order for accessing this value is [y][x] and not [x][y], but inputing the values the other way around from the drawn maze would be more error-prone, since it would be rotated 45 degrees.
 const rooms = [
     [0, 11, 8, 8, 14, 8, 8, 9],
@@ -63,20 +66,29 @@ const keys = [
 
 //location of treasure box. format [x,y]
 const treasureBox = [7, 3];
+
+//starting location
+const startingx = 0;
+const startingy = 3;
+
+// ****** end of maze-defining section *****
+
+//generate flags for finding keys
+const keyFlags = [];
+keys.forEach((location) => {
+    keyFlags.push(1);
+})
+
 //number of keys to open box
-const boxKeys = 2;
+const boxKeys = keys.length;
 
 //starting coordinates & room type
-let x = 0;
-let y = 3;
-let currentRoomType = roomTypes[rooms[y][x]]; //needs to be updated every time x or y is.
+//needs to be redone when game restarted
+let x = startingx;
+let y = startingy;
+//currentroomtype needs to be updated every time x or y is
+let currentRoomType = roomTypes[rooms[y][x]]; 
 let numberOfKeys = 0;
-
-//function for determining room type from coordinates
-/*function findRoomType() {
-    let roomTypeIndex = rooms[y][x];
-    return roomTypes[rooms[y][x]];
-}*/
 
 //function for displaying coordinates and roomtype
 function displayRoomData() { 
@@ -126,9 +138,13 @@ function foundChest() {
 
 //function to check for key
 function checkKey() {
-    keys.forEach((location) => {
+    keys.forEach((location, i) => {
         if (x == location[0] && y == location[1]) {
-            foundKey();
+            if (keyFlags[i]) {
+                keyFlags[i] = 0
+                foundKey();
+                return;
+            } 
         }
     } )     
 }
