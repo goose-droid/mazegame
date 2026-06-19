@@ -56,6 +56,9 @@ const startingy = 3;
 
 // ****** end of maze-defining section *****
 
+//testing
+let testing = true;
+
 //types of rooms (4 directions where each may be passable or not, order NSEW)
 //using 1s and 0s to make conditional statements easier later
 const roomTypes = ["0000", "1111", "1000", "0100", "0010", "0001", "1100", "0110", "0011", "1001", "0101", "1010", "1110", "0111", "1011", "1101"];
@@ -80,7 +83,9 @@ let numberOfKeys = 0;
 //function for displaying coordinates and roomtype
 //for testing
 function displayRoomData() { 
-    roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>` 
+    if (testing) {
+         roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>`
+    }
 };
 
 // function for disabling and enabling buttons
@@ -118,6 +123,13 @@ function manageButtons() {
     }
 }
 
+function disableButtons() {
+    ButtonNorth.setAttribute("disabled", "disabled");
+    ButtonSouth.setAttribute("disabled", "disabled");
+    ButtonEast.setAttribute("disabled", "disabled");
+    ButtonWest.setAttribute("disabled", "disabled");
+}
+
 //function that runs upon finding key
 function foundKey() {
     objectImage.src = "key.png";
@@ -135,7 +147,8 @@ function foundChest() {
     if (numberOfKeys < boxKeys) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
     } else {
-        text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats!`;
+        disableButtons();
+        text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
     }
 }
 
