@@ -93,31 +93,23 @@ function displayRoomData() {
 function manageButtons() {
     if (Number(currentRoomType[0])) {
         ButtonNorth.removeAttribute("disabled");
-        northTile.classList.remove("wall");
     } else {
         ButtonNorth.setAttribute("disabled", "disabled");
-        northTile.classList.add("wall");
     }
     if (Number(currentRoomType[1])) {
         ButtonSouth.removeAttribute("disabled");
-        southTile.classList.remove("wall");
     } else {
         ButtonSouth.setAttribute("disabled", "disabled");
-        southTile.classList.add("wall");
     }
     if (Number(currentRoomType[2])) {
         ButtonEast.removeAttribute("disabled");
-        eastTile.classList.remove("wall");
     } else {
         ButtonEast.setAttribute("disabled", "disabled");
-        eastTile.classList.add("wall");
     }
     if(Number(currentRoomType[3])) {
         ButtonWest.removeAttribute("disabled");
-        westTile.classList.remove("wall");
     } else {
         ButtonWest.setAttribute("disabled", "disabled");
-        westTile.classList.add("wall");
     }
 }
 

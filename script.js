@@ -90,6 +90,29 @@ function displayRoomData() {
     };
 }
 
+function manageButtons() {
+    if (tiles[x][y+1] % 2) {
+        ButtonNorth.removeAttribute("disabled");
+    } else {
+        ButtonNorth.setAttribute("disabled", "disabled");
+    }
+    if (tiles[x][y-1] % 2) {
+        ButtonSouth.removeAttribute("disabled");
+    } else {
+        ButtonSouth.setAttribute("disabled", "disabled");
+    }
+    if (tiles[x+1][y] % 2) {
+        ButtonEast.removeAttribute("disabled");
+    } else {
+        ButtonEast.setAttribute("disabled", "disabled");
+    }
+    if(tiles[x-1][y] % 2) {
+        ButtonWest.removeAttribute("disabled");
+    } else {
+        ButtonWest.setAttribute("disabled", "disabled");
+    }
+}
+
 
 //function updatePosition
 function updatePosition(direction) {
@@ -108,6 +131,7 @@ function updatePosition(direction) {
             break;
     }
     currentTyleType = tiles[x][y];
+    manageButtons();
     applyTileImages();
     displayRoomData();
     //clear textbox
@@ -122,9 +146,10 @@ function updatePosition(direction) {
 
 //function manageButtons
 
-// apply starting images
+// apply starting data
 applyTileImages();
 displayRoomData();
+manageButtons();
 
 ButtonNorth.addEventListener("click", () => {
     updatePosition("n");
