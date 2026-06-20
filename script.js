@@ -74,6 +74,7 @@ let y = startingPosition[1];
 let currentTileType = tiles[x][y]; 
 let numberOfKeys = 0;
 
+///*** Functions */
 
 //function to apply appropriate tile pics
 function applyTileImages() {
@@ -96,7 +97,7 @@ function applyTileImages() {
 //for testing
 function displayRoomData() {
     if (testing) {
-        roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${tileClassNames[tiles[x][y]]}</p>`;     
+        roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Tile type: ${tileClassNames[tiles[x][y]]}</p>`;     
     };
 }
 
