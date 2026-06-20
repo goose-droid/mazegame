@@ -6,11 +6,8 @@ const ButtonSouth = document.querySelector("#ButtonSouth");
 const ButtonEast = document.querySelector("#ButtonEast");
 const ButtonWest = document.querySelector("#ButtonWest");
 
-//directional tiles in map graphic
-const northTile = document.querySelector("#north-tile");
-const southTile = document.querySelector("#south-tile");
-const eastTile = document.querySelector("#east-tile");
-const westTile = document.querySelector("#west-tile");
+//tiles in map graphic
+const squares = document.querySelectorAll("div.tile");
 
 //object img in map graphic
 const objectImage = document.querySelector("#object-image");
@@ -53,3 +50,49 @@ const treasureBox = [8, 4];
 const startingPosition = [1, 4];
 
 // *** end map definition
+
+const tileClassNames = ["wall", "path", "water", "path"];
+
+//number of keys to open box
+const boxKeys = keys.length;
+
+//starting coordinates, tile type, key numbers
+//needs to be redone when game restarted
+let x = startingPosition[0];
+let y = startingPosition[1];
+//currenTileType needs to be updated every time x or y is
+let currentTileType = tiles[x][y]; 
+let numberOfKeys = 0;
+
+//function to apply appropriate tiles graphics
+function applyTileImages() {
+    squares[0].classList.add(tileClassNames[tiles[x-1][y+1]]);
+    squares[1].classList.add(tileClassNames[tiles[x][y+1]]);
+    squares[2].classList.add(tileClassNames[tiles[x+1][y+1]]);
+    squares[3].classList.add(tileClassNames[tiles[x-1][y]]);
+    squares[4].classList.add(tileClassNames[tiles[x][y]]);
+    squares[5].classList.add(tileClassNames[tiles[x+1][y+1]]);
+    squares[6].classList.add(tileClassNames[tiles[x-1][y-1]]);
+    squares[7].classList.add(tileClassNames[tiles[x][y-1]]);
+    squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);
+}
+
+//function updatePosition
+
+//function manageButtons
+
+// apply starting images
+applyTileImages();
+
+ButtonNorth.addEventListener("click", () => {
+    updatePosition("n");
+})
+ButtonSouth.addEventListener("click", () => {
+    updatePosition("s");
+})
+ButtonEast.addEventListener("click", () => {
+    updatePosition("e");
+})
+ButtonWest.addEventListener("click", () => {
+    updatePosition("w");
+})

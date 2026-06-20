@@ -82,7 +82,7 @@ let numberOfKeys = 0;
 //for testing
 function displayRoomData() { 
     if (testing) {
-         roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentRoomType}</p>`
+         roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${currentTileType}</p>`
     }
 };
 
