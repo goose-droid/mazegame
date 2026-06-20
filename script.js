@@ -51,6 +51,8 @@ const startingPosition = [1, 4];
 
 // *** end map definition
 
+let testing = true;
+
 const tileClassNames = ["wall", "path", "water", "path"];
 
 //number of keys to open box
@@ -66,23 +68,63 @@ let numberOfKeys = 0;
 
 //function to apply appropriate tiles graphics
 function applyTileImages() {
+    squares.forEach((square) => {
+        tileClassNames.forEach((className) => {
+            square.classList.remove(className);
+        })
+    })
     squares[0].classList.add(tileClassNames[tiles[x-1][y+1]]);
     squares[1].classList.add(tileClassNames[tiles[x][y+1]]);
     squares[2].classList.add(tileClassNames[tiles[x+1][y+1]]);
     squares[3].classList.add(tileClassNames[tiles[x-1][y]]);
     squares[4].classList.add(tileClassNames[tiles[x][y]]);
-    squares[5].classList.add(tileClassNames[tiles[x+1][y+1]]);
+    squares[5].classList.add(tileClassNames[tiles[x+1][y]]);
     squares[6].classList.add(tileClassNames[tiles[x-1][y-1]]);
     squares[7].classList.add(tileClassNames[tiles[x][y-1]]);
     squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);
 }
 
+function displayRoomData() {
+    if (testing) {
+        roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${tileClassNames[tiles[x][y]]}</p>`;     
+    };
+}
+
+
 //function updatePosition
+function updatePosition(direction) {
+    switch(direction) {
+        case "n":
+            y++;
+            break;
+        case "s":
+            y--;
+            break;
+        case "e":
+            x++;
+            break;
+        case "w":
+            x--;
+            break;
+    }
+    currentTyleType = tiles[x][y];
+    applyTileImages();
+    displayRoomData();
+    //clear textbox
+    text.innerHTML = "";
+    //check for keys and box
+    //checkKey();
+    //manageButtons();
+    /*if (x == treasureBox[0] && y == treasureBox[1]) {
+        foundChest();
+    }*/
+}
 
 //function manageButtons
 
 // apply starting images
 applyTileImages();
+displayRoomData();
 
 ButtonNorth.addEventListener("click", () => {
     updatePosition("n");
