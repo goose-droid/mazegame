@@ -51,7 +51,7 @@ const startingPosition = [1, 4];
 
 // *** end map definition
 
-let testing = true;
+let testing = false;
 
 const tileClassNames = ["wall", "path", "water", "path"];
 
