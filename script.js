@@ -17,6 +17,8 @@ const roomstats = document.querySelector("#roomstats");
 const text = document.querySelector("#text");
 
 // *** Map definition 
+// this section may in the future be broken off in some way
+// to allow for multiple mazes
 
 // map layout. the index of the outer array is x
 // the indices of the inner arrays are y
@@ -50,6 +52,7 @@ const treasureBox = [8, 4];
 const startingPosition = [1, 4];
 
 // *** end map definition
+// variables/constants
 
 let testing = false;
 
@@ -65,7 +68,6 @@ keys.forEach((location) => {
 })
 
 //starting coordinates, tile type, key numbers
-//needs to be redone when game restarted
 let x = startingPosition[0];
 let y = startingPosition[1];
 //currenTileType needs to be updated every time x or y is
@@ -73,7 +75,7 @@ let currentTileType = tiles[x][y];
 let numberOfKeys = 0;
 
 
-//function to apply appropriate tiles graphics
+//function to apply appropriate tile pics
 function applyTileImages() {
     squares.forEach((square) => {
         tileClassNames.forEach((className) => {
@@ -91,12 +93,15 @@ function applyTileImages() {
     squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);
 }
 
+//for testing
 function displayRoomData() {
     if (testing) {
         roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Room type: ${tileClassNames[tiles[x][y]]}</p>`;     
     };
 }
 
+//turns buttons on or off depending on what tile types
+//lie to the north/south/east/west
 function manageButtons() {
     if (tiles[x][y+1] % 2) {
         ButtonNorth.removeAttribute("disabled");
@@ -158,9 +163,10 @@ function disableButtons() {
     ButtonWest.setAttribute("disabled", "disabled");
 }
 
-
-
-//function updatePosition
+//handles movement, updating the pictures, refreshing the
+//object picture to default, managing buttons, clearing
+//the text box, and checking for keys or box on new tile
+//basically the main function of the puzzle
 function updatePosition(direction) {
     switch(direction) {
         case "n":
@@ -190,13 +196,12 @@ function updatePosition(direction) {
     }
 }
 
-//function manageButtons
-
 // apply starting data
 applyTileImages();
 displayRoomData();
 manageButtons();
 
+//listen for button presses to trigger updatePosition
 ButtonNorth.addEventListener("click", () => {
     updatePosition("n");
 })
