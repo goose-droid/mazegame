@@ -58,6 +58,12 @@ const tileClassNames = ["wall", "path", "water", "path"];
 //number of keys to open box
 const boxKeys = keys.length;
 
+//generate flags for picking up keys
+const keyFlags = [];
+keys.forEach((location) => {
+    keyFlags.push(1);
+})
+
 //starting coordinates, tile type, key numbers
 //needs to be redone when game restarted
 let x = startingPosition[0];
@@ -65,6 +71,7 @@ let y = startingPosition[1];
 //currenTileType needs to be updated every time x or y is
 let currentTileType = tiles[x][y]; 
 let numberOfKeys = 0;
+
 
 //function to apply appropriate tiles graphics
 function applyTileImages() {
@@ -113,6 +120,45 @@ function manageButtons() {
     }
 }
 
+function foundKey() {
+    objectImage.src = "key.png";
+    text.innerHTML = "<p>You found a key!<p>";
+    numberOfKeys++;
+    text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
+}
+
+function checkKey() {
+    keys.forEach((location, i) => {
+        if (x == location[0] && y == location[1]) {
+            //check if key was already picked up
+            if (keyFlags[i]) {
+                keyFlags[i] = 0
+                foundKey();
+                return;
+            } 
+        }
+    } )     
+}
+
+function foundChest() {
+    objectImage.src = "chest.png";
+    text.innerHTML = "<p>You found the treasure chest!<p>";
+    if (numberOfKeys < boxKeys) {
+        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
+    } else {
+        disableButtons();
+        text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
+    }
+}
+
+function disableButtons() {
+    ButtonNorth.setAttribute("disabled", "disabled");
+    ButtonSouth.setAttribute("disabled", "disabled");
+    ButtonEast.setAttribute("disabled", "disabled");
+    ButtonWest.setAttribute("disabled", "disabled");
+}
+
+
 
 //function updatePosition
 function updatePosition(direction) {
@@ -133,15 +179,15 @@ function updatePosition(direction) {
     currentTyleType = tiles[x][y];
     manageButtons();
     applyTileImages();
+    objectImage.src = "person.png";
     displayRoomData();
     //clear textbox
     text.innerHTML = "";
     //check for keys and box
-    //checkKey();
-    //manageButtons();
-    /*if (x == treasureBox[0] && y == treasureBox[1]) {
+    checkKey();
+    if (x == treasureBox[0] && y == treasureBox[1]) {
         foundChest();
-    }*/
+    }
 }
 
 //function manageButtons
