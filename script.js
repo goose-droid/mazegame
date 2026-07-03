@@ -6,6 +6,9 @@ const ButtonSouth = document.querySelector("#ButtonSouth");
 const ButtonEast = document.querySelector("#ButtonEast");
 const ButtonWest = document.querySelector("#ButtonWest");
 
+//arrow keys toggle button
+const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
+
 //tiles in map graphic
 const squares = document.querySelectorAll("div.tile");
 
@@ -15,6 +18,7 @@ const objectImage = document.querySelector("#object-image");
 //text
 const roomstats = document.querySelector("#roomstats");
 const text = document.querySelector("#text");
+const keysText = document.querySelector("#arrow-keys-status");
 
 // *** Map definition 
 // this section may in the future be broken off in some way
@@ -80,6 +84,7 @@ const startingPosition = [1, 28];
 // variables/constants
 
 let testing = false;
+let arrowKeys = false;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
@@ -226,6 +231,7 @@ function updatePosition(direction) {
 applyTileImages();
 displayRoomData();
 manageButtons();
+keysText.innerHTML = "Arrow key input disabled";
 
 //listen for button presses to trigger updatePosition
 ButtonNorth.addEventListener("click", () => {
@@ -240,3 +246,40 @@ ButtonEast.addEventListener("click", () => {
 ButtonWest.addEventListener("click", () => {
     updatePosition("w");
 })
+
+//listen for arrow keys toggle button
+ButtonToggleArrowKeys.addEventListener("click", () => {
+    if (arrowKeys) {
+        arrowKeys = false;
+        keysText.innerHTML = "Arrow key input disabled";
+    } else {
+        arrowKeys = true;
+        keysText.innerHTML = "Arrow key input enabled";
+    }
+})
+
+//listen for arrow keys if toggled
+
+    document.addEventListener("keydown", function(event)  {
+        if (arrowKeys) {
+            switch (event.key) {
+                case "ArrowLeft":
+                    event.preventDefault();
+                    ButtonWest.click();
+                    break;
+                case "ArrowUp":
+                    event.preventDefault();
+                    ButtonNorth.click();
+                    break;
+                case "ArrowRight":
+                    event.preventDefault();
+                    ButtonEast.click();
+                    break;
+                case "ArrowDown":
+                    event.preventDefault();
+                    ButtonSouth.click();
+                    break;
+            }
+        }
+    });
+
