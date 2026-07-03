@@ -47,5 +47,11 @@ body {
     .water {
         background-image: url("water.png");
     }
+    .grass {
+        background-image: url("grass.png");
+    }
+    .warp {
+        background-image: url("warp.png");
+    }
     
 }
