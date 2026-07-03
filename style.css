@@ -53,5 +53,8 @@ body {
     .warp {
         background-image: url("warp.png");
     }
+    .mossyfloor {
+        background-image: url("mossyfloor.png");
+    }
     
 }

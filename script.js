@@ -25,7 +25,7 @@ const text = document.querySelector("#text");
 // the elements in the inner arrays are tiles
 // 0 = wall, 1 = path, 2 = water, 3 = stairs (path for now),
 // 4 = unused (wall for now), 5 = warp, 6 = unused (wall for now),
-// 7 = grass
+// 7 = mossy floor, 8 = unused (wall), 9 = grass
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
 const tiles = [
@@ -81,7 +81,7 @@ const startingPosition = [1, 28];
 
 let testing = false;
 
-const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "grass"];
+const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
 //number of keys to open box
 const boxKeys = keys.length;
