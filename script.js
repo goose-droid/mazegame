@@ -56,7 +56,7 @@ const startingPosition = [1, 4];
 
 let testing = false;
 
-const tileClassNames = ["wall", "path", "water", "path"];
+const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "grass"];
 
 //number of keys to open box
 const boxKeys = keys.length;
