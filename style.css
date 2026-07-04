@@ -23,6 +23,10 @@ body {
     margin: 5px;
 }
 
+#use-torch {
+    margin: 5px;
+}
+
 #grid {
     padding: 10px;
     margin: 0px;

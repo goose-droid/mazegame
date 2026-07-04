@@ -9,6 +9,9 @@ const ButtonWest = document.querySelector("#ButtonWest");
 //arrow keys toggle button
 const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 
+//use torch button
+const ButtonUseTorch = document.querySelector("#use-torch");
+
 //tiles in map graphic
 const squares = document.querySelectorAll("div.tile");
 
@@ -19,6 +22,7 @@ const objectImage = document.querySelector("#object-image-center");
 const roomstats = document.querySelector("#roomstats");
 const text = document.querySelector("#text");
 const keysText = document.querySelector("#arrow-keys-status");
+const torchText = document.querySelector("#torch-count");
 
 // *** Map definition 
 // this section may in the future be broken off in some way
@@ -90,6 +94,8 @@ const startingPosition = [3, 30];
 let testing = false;
 let arrowKeys = false;
 let dark = true;
+let torches = 5;
+let torchSteps = 0;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
@@ -156,6 +162,7 @@ applySquaresCoords();
 //function to apply appropriate tile pics
 function applyTileImages() {
     squares.forEach((square, i) => {
+        squares[i].classList.remove("dark");
         tileClassNames.forEach((className) => {
             square.classList.remove(className);
         })
@@ -265,6 +272,17 @@ function disableButtons() {
     ButtonSouth.setAttribute("disabled", "disabled");
     ButtonEast.setAttribute("disabled", "disabled");
     ButtonWest.setAttribute("disabled", "disabled");
+    ButtonUseTorch.setAttribute("disabled", "disabled");
+}
+
+function useTorch(){
+    torches--;
+    torchText.innerHTML = `Torches left: ${torches}`;
+    if (torches < 1) {
+        ButtonUseTorch.setAttribute("disabled", "disabled");
+    };
+    dark = false;
+    applyTileImages();
 }
 
 //handles movement, updating the pictures, refreshing the
@@ -287,6 +305,13 @@ function updatePosition(direction) {
             break;
     }
     currentTyleType = tiles[x][y];
+    if (!dark) {
+        torchSteps++;
+    }
+    if (torchSteps > 11) {
+        dark = true;
+        torchSteps = 0;
+    }
     applySquaresCoords();
     manageButtons();
     applyTileImages();
@@ -308,6 +333,7 @@ applyTileImages();
 displayRoomData();
 manageButtons();
 keysText.innerHTML = "Arrow key input disabled";
+torchText.innerHTML = `Torches left: ${torches}`;
 
 //listen for button presses to trigger updatePosition
 ButtonNorth.addEventListener("click", () => {
@@ -321,6 +347,11 @@ ButtonEast.addEventListener("click", () => {
 })
 ButtonWest.addEventListener("click", () => {
     updatePosition("w");
+})
+
+//listen for torch button
+ButtonUseTorch.addEventListener("click", () => {
+    useTorch();
 })
 
 //listen for arrow keys toggle button
