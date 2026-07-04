@@ -13,7 +13,7 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 const squares = document.querySelectorAll("div.tile");
 
 //object img in map graphic
-const objectImage = document.querySelector("#object-image");
+const objectImage = document.querySelector("#object-image-center");
 
 //text
 const roomstats = document.querySelector("#roomstats");

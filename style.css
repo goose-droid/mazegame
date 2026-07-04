@@ -34,7 +34,7 @@ body {
         margin: 0px;
         width: 30px;
         height: 30px;
-        #object-image {
+        .object-image {
             margin:0px;
             padding: 0px;
         }
