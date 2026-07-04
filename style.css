@@ -60,5 +60,9 @@ body {
     .mossyfloor {
         background-image: url("mossyfloor.png");
     }
+    .dark {
+        background-image: none;
+        background-color: black;
+    }
     
 }

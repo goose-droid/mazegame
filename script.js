@@ -135,7 +135,9 @@ function applyTileImages() {
         tileClassNames.forEach((className) => {
             square.classList.remove(className);
         })
-        squares[i].innerHTML = '';
+        if (i != 4) {
+            squares[i].innerHTML = '';
+        }
         if ( i == 4) {
             squares[i].innerHTML = '<img id="object-image-center" class="object-image" src="person.png">';
         }
@@ -147,15 +149,6 @@ function applyTileImages() {
             squares[i].innerHTML =  '<img class="object-image" src="chest.png">';
         }
     })
-    /*squares[0].classList.add(tileClassNames[tiles[squaresCoords[0][0]][squaresCoords[0][1]]]);
-    squares[1].classList.add(tileClassNames[tiles[x][y+1]]);
-    squares[2].classList.add(tileClassNames[tiles[x+1][y+1]]);
-    squares[3].classList.add(tileClassNames[tiles[x-1][y]]);
-    squares[4].classList.add(tileClassNames[tiles[x][y]]);
-    squares[5].classList.add(tileClassNames[tiles[x+1][y]]);
-    squares[6].classList.add(tileClassNames[tiles[x-1][y-1]]);
-    squares[7].classList.add(tileClassNames[tiles[x][y-1]]);
-    squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);*/
 }
 
 //for testing
