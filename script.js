@@ -133,33 +133,12 @@ let squaresCoords = [];
 
 //function to set up squaresCoords
 function applySquaresCoords() {
-    squaresCoords = [
-        [x-2, y+2], //first row
-        [x-1, y+2],
-        [x, y+2],
-        [x+1, y+2],
-        [x+2, y+2],
-        [x-2, y+1],//second row
-        [x-1, y+1],
-        [x, y+1],
-        [x+1, y+1],
-        [x+2, y+1],
-        [x-2, y], //third row
-        [x-1, y],
-        [x, y],
-        [x+1, y],
-        [x+2, y],
-        [x-2, y-1], //fourth row
-        [x-1, y-1],
-        [x, y-1],
-        [x+1, y-1],
-        [x+2, y-1],
-        [x-2, y-2], //fifth row
-        [x-1, y-2],
-        [x, y-2],
-        [x+1, y-2],
-        [x+2, y-2]
-    ]
+    squaresCoords = [];
+    for (j = 2; j > -3; j--) {
+        for (k = -2; k < 3; k++) {
+            squaresCoords.push([x+k, y+j]);
+        }
+    }
 }
 
 //run function the first time to set up starting coords
@@ -178,7 +157,9 @@ function applyTileImages() {
         if ( i == 12) {
             squares[i].innerHTML = '<img id="object-image-center" class="object-image" src="person.png">';
         }
+        
         squares[i].classList.add(tileClassNames[tiles[squaresCoords[i][0]][squaresCoords[i][1]]]);
+
         if (checkKey(squaresCoords[i][0], squaresCoords[i][1])) {
             squares[i].innerHTML = '<img class="object-image" src="key.png">';
         }
