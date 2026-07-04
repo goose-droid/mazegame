@@ -330,7 +330,7 @@ function updatePosition(direction) {
     if (!dark) {
         torchSteps++;
     }
-    if (torchSteps > 11) {
+    if (torchSteps > 16) {
         dark = true;
         torchSteps = 0;
     }
