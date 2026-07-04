@@ -88,6 +88,12 @@ const treasureBox = [18, 27];
 // starting location. format [x, y]
 const startingPosition = [3, 30];
 
+//warp A format [x, y]
+const warpA = [5, 13];
+
+//warp B format [x, y]
+const warpB = [29, 29];
+
 // *** end map definition
 // variables/constants
 
@@ -267,6 +273,13 @@ function foundChest() {
     }
 }
 
+/*function warp(warpx,warpy) {
+    x = warpx;
+    y = warpy;
+    applySquaresCoords();
+    applyTileImages();
+}*/
+
 function disableButtons() {
     ButtonNorth.setAttribute("disabled", "disabled");
     ButtonSouth.setAttribute("disabled", "disabled");
@@ -305,6 +318,15 @@ function updatePosition(direction) {
             break;
     }
     currentTyleType = tiles[x][y];
+    if (currentTyleType == 5){
+        if (x == warpA[0] && y == warpA[1]) {
+            x = warpB[0];
+            y = warpB[1];
+        } else if (x == warpB[0] && y == warpB[1]) {
+            x = warpA[0];
+            y = warpA[1];
+        }
+    } 
     if (!dark) {
         torchSteps++;
     }
