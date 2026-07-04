@@ -19,6 +19,10 @@ body {
     }
 }
 
+#toggle-arrow-keys {
+    margin: 5px;
+}
+
 #grid {
     padding: 10px;
     margin: 0px;
