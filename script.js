@@ -12,10 +12,6 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 //tiles in map graphic
 const squares = document.querySelectorAll("div.tile");
 
-//define coordinates of squares. index matches squares index
-//set in later function
-const squaresCoords;
-
 //object img in map graphic
 const objectImage = document.querySelector("#object-image-center");
 
@@ -108,6 +104,11 @@ let y = startingPosition[1];
 let currentTileType = tiles[x][y]; 
 let numberOfKeys = 0;
 
+//define coordinates of squares. index matches squares index
+//set in later function
+let squaresCoords = [];
+
+
 ///*** Functions */
 
 //function to set up squaresCoords
@@ -125,13 +126,26 @@ function applySquaresCoords() {
     ]
 }
 
+//run function the first time to set up starting coords
+applySquaresCoords();
+
 //function to apply appropriate tile pics
 function applyTileImages() {
     squares.forEach((square, i) => {
         tileClassNames.forEach((className) => {
             square.classList.remove(className);
         })
+        squares[i].innerHTML = '';
+        if ( i == 4) {
+            squares[i].innerHTML = '<img id="object-image-center" class="object-image" src="person.png">';
+        }
         squares[i].classList.add(tileClassNames[tiles[squaresCoords[i][0]][squaresCoords[i][1]]]);
+        if (checkKey(squaresCoords[i][0], squaresCoords[i][1])) {
+            squares[i].innerHTML = '<img class="object-image" src="key.png">';
+        }
+        if (squaresCoords[i][0] == treasureBox[0] && squaresCoords[i][1] == treasureBox[1]) {
+            squares[i].innerHTML =  '<img class="object-image" src="chest.png">';
+        }
     })
     /*squares[0].classList.add(tileClassNames[tiles[squaresCoords[0][0]][squaresCoords[0][1]]]);
     squares[1].classList.add(tileClassNames[tiles[x][y+1]]);
@@ -177,23 +191,36 @@ function manageButtons() {
 }
 
 function foundKey() {
+    keys.forEach((location, i) => {
+        if (x == location[0] && y == location[1]) {
+            //flip key flag 
+            if (keyFlags[i]) {
+                keyFlags[i] = 0
+            } 
+        }
+    } )
     objectImage.src = "key.png";
     text.innerHTML = "<p>You found a key!<p>";
     numberOfKeys++;
     text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
 }
 
-function checkKey() {
+function checkKey(x, y) {
+    let keySeen = false;
+    //its silly that this code is repeated from foundKey() but can't figure out how else to manage it
     keys.forEach((location, i) => {
         if (x == location[0] && y == location[1]) {
             //check if key was already picked up
             if (keyFlags[i]) {
-                keyFlags[i] = 0
-                foundKey();
-                return;
+                keySeen = true;
             } 
         }
-    } )     
+    } )
+    if (keySeen) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function foundChest() {
@@ -242,7 +269,9 @@ function updatePosition(direction) {
     //clear textbox
     text.innerHTML = "";
     //check for keys and box
-    checkKey();
+    if (checkKey(x, y)) {
+        foundKey();
+    };
     if (x == treasureBox[0] && y == treasureBox[1]) {
         foundChest();
     }
