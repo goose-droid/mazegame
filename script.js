@@ -89,11 +89,15 @@ const startingPosition = [3, 30];
 
 let testing = false;
 let arrowKeys = false;
+let dark = true;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
 //number of keys to open box
 const boxKeys = keys.length;
+
+//tiles that are dark when dark
+const darkTiles = [0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24];
 
 //generate flags for picking up keys
 const keyFlags = [];
@@ -167,6 +171,15 @@ function applyTileImages() {
         }
         if (squaresCoords[i][0] == treasureBox[0] && squaresCoords[i][1] == treasureBox[1]) {
             squares[i].innerHTML =  '<img class="object-image" src="chest.png">';
+        }
+        if (dark) {
+            if (darkTiles.includes(i)) {
+                tileClassNames.forEach((className) => {
+                    squares[i].classList.remove(className);
+                })
+                squares[i].classList.add("dark");
+                squares[i].innerHTML = '';
+            }
         }
     })
 }
