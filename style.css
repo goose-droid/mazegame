@@ -27,7 +27,7 @@ body {
     padding: 10px;
     margin: 0px;
     display: grid;
-    grid-template-columns: 30px 30px 30px;
+    grid-template-columns: 30px 30px 30px 30px 30px;
     .tile {
         /*background-image: url("floor.png");*/
         padding: 0px;
