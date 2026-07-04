@@ -12,6 +12,10 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 //tiles in map graphic
 const squares = document.querySelectorAll("div.tile");
 
+//define coordinates of squares. index matches squares index
+//set in later function
+const squaresCoords;
+
 //object img in map graphic
 const objectImage = document.querySelector("#object-image-center");
 
@@ -106,14 +110,30 @@ let numberOfKeys = 0;
 
 ///*** Functions */
 
+//function to set up squaresCoords
+function applySquaresCoords() {
+    squaresCoords = [
+        [x-1, y+1],
+        [x, y+1],
+        [x+1, y+1],
+        [x-1, y],
+        [x, y],
+        [x+1, y],
+        [x-1, y-1],
+        [x, y-1],
+        [x+1, y-1]
+    ]
+}
+
 //function to apply appropriate tile pics
 function applyTileImages() {
-    squares.forEach((square) => {
+    squares.forEach((square, i) => {
         tileClassNames.forEach((className) => {
             square.classList.remove(className);
         })
+        squares[i].classList.add(tileClassNames[tiles[squaresCoords[i][0]][squaresCoords[i][1]]]);
     })
-    squares[0].classList.add(tileClassNames[tiles[x-1][y+1]]);
+    /*squares[0].classList.add(tileClassNames[tiles[squaresCoords[0][0]][squaresCoords[0][1]]]);
     squares[1].classList.add(tileClassNames[tiles[x][y+1]]);
     squares[2].classList.add(tileClassNames[tiles[x+1][y+1]]);
     squares[3].classList.add(tileClassNames[tiles[x-1][y]]);
@@ -121,7 +141,7 @@ function applyTileImages() {
     squares[5].classList.add(tileClassNames[tiles[x+1][y]]);
     squares[6].classList.add(tileClassNames[tiles[x-1][y-1]]);
     squares[7].classList.add(tileClassNames[tiles[x][y-1]]);
-    squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);
+    squares[8].classList.add(tileClassNames[tiles[x+1][y-1]]);*/
 }
 
 //for testing
@@ -214,6 +234,7 @@ function updatePosition(direction) {
             break;
     }
     currentTyleType = tiles[x][y];
+    applySquaresCoords();
     manageButtons();
     applyTileImages();
     objectImage.src = "person.png";
