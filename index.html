@@ -2,42 +2,14 @@
 <html>
     <head>
         <title>Maze Game</title>
+        <meta charset="UTF-8"/>
         <link href="style.css" rel="stylesheet" />
     </head>
     <body>
         <h1>Maze Game</h1>
         <p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move.</p>
             <div id="grid">
-                <!--first row-->
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <!--second row-->
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <!--third row-->
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"><img id="object-image-center" class="object-image" src="person.png"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <!--fourth row-->
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <!--fifth row-->
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
-                <div class="tile"></div>
+                <canvas id="canvas" width="150" height="150">This is the game canvas.</canvas> 
             </div>
             <div class="directional-buttons">
                 <button id="ButtonNorth">↑</button><br>
@@ -50,6 +22,13 @@
             <div id="torch-count"></div>
             <button id="toggle-arrow-keys">Toggle arrow key input</button>
             <div id="arrow-keys-status"></div>
+            <div class="hidden">
+            <img
+                id="source"
+                src="mazesheet.png"
+                width="120"
+                height="60" />
+            </div>
         <script src="script.js"></script>
     </body>
 </html>

@@ -13,10 +13,17 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 const ButtonUseTorch = document.querySelector("#use-torch");
 
 //tiles in map graphic
-const squares = document.querySelectorAll("div.tile");
+//const squares = document.querySelectorAll("div.tile");
 
 //object img in map graphic
-const objectImage = document.querySelector("#object-image-center");
+//const objectImage = document.querySelector("#object-image-center");
+
+//sprite sheet
+const sheet = document.getElementById("source");
+
+//canvas 
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 //text
 const roomstats = document.querySelector("#roomstats");
@@ -145,7 +152,7 @@ function applySquaresCoords() {
 applySquaresCoords();
 
 //function to apply appropriate tile pics
-function applyTileImages() {
+/*function applyTileImages() {
     squares.forEach((square, i) => {
         squares[i].classList.remove("dark");
         tileClassNames.forEach((className) => {
@@ -176,6 +183,55 @@ function applyTileImages() {
             }
         }
     })
+}*/
+
+function drawTile (type, canvasx, canvasy) {
+   switch (type) {
+    case "wall":
+      ctx.drawImage(sheet, 0, 0, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "path":
+      ctx.drawImage(sheet, 30, 0, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "mossyfloor":
+      ctx.drawImage(sheet, 60, 0, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "water":
+      ctx.drawImage(sheet, 90, 0, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "warp":
+      ctx.drawImage(sheet, 0, 30, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "person":
+      ctx.drawImage(sheet, 30, 30, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "key":
+      ctx.drawImage(sheet, 60, 30, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    case "chest":
+      ctx.drawImage(sheet, 90, 30, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+    default:
+      ctx.drawImage(sheet, 0, 0, 30, 30, canvasx, canvasy, 30, 30);
+      break;
+   }
+  }
+
+
+//draw background
+function drawBackground() {
+    let j = 0;
+    for (let i = 0; i < 5; i++) {
+      for (let k = 0; k < 5; k++) {
+        drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
+        j++;
+      }
+    }
+}
+
+//draw character
+function drawChara() {
+    drawTile("person", 60, 60);
 }
 
 //for testing
@@ -317,8 +373,9 @@ function updatePosition(direction) {
     }
     applySquaresCoords();
     manageButtons();
-    applyTileImages();
-    objectImage.src = "person.png";
+    drawBackground();
+    drawChara();
+    //objectImage.src = "person.png";
     displayRoomData();
     //clear textbox
     text.innerHTML = "";
@@ -331,8 +388,12 @@ function updatePosition(direction) {
     }
 }
 
+//await sheet load
+//await sheet.decode();
+
 // apply starting data
-applyTileImages();
+drawBackground();
+drawChara();
 displayRoomData();
 manageButtons();
 keysText.innerHTML = "Arrow key input disabled";
