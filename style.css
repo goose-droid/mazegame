@@ -27,50 +27,6 @@ body {
     margin: 5px;
 }
 
-#grid {
-    padding: 10px;
-    margin: 0px;
-    display: grid;
-    grid-template-columns: 30px 30px 30px 30px 30px;
-    .tile {
-        /*background-image: url("floor.png");*/
-        padding: 0px;
-        margin: 0px;
-        width: 30px;
-        height: 30px;
-        .object-image {
-            margin:0px;
-            padding: 0px;
-        }
-    }
-    .wall {
-        background-image: url("brick.png");
-    }
-    .path {
-        background-image: url("floor.png");
-    }
-    .stairs {
-        background-image: url("stairsup.png");
-    }
-    .water {
-        background-image: url("water.png");
-    }
-    .grass {
-        background-image: url("grass.png");
-    }
-    .warp {
-        background-image: url("warp.png");
-    }
-    .mossyfloor {
-        background-image: url("mossyfloor.png");
-    }
-    .dark {
-        background-image: none;
-        background-color: black;
-    }
-    
-}
-
 canvas {
     border: 1px solid black;
     margin: 15px;
