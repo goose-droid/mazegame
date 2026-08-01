@@ -12,12 +12,6 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 //use torch button
 const ButtonUseTorch = document.querySelector("#use-torch");
 
-//tiles in map graphic
-//const squares = document.querySelectorAll("div.tile");
-
-//object img in map graphic
-//const objectImage = document.querySelector("#object-image-center");
-
 //sprite sheet
 const sheet = document.getElementById("source");
 
@@ -151,40 +145,7 @@ function applySquaresCoords() {
 //run function the first time to set up starting coords
 applySquaresCoords();
 
-//function to apply appropriate tile pics
-/*function applyTileImages() {
-    squares.forEach((square, i) => {
-        squares[i].classList.remove("dark");
-        tileClassNames.forEach((className) => {
-            square.classList.remove(className);
-        })
-        if (i != 12) {
-            squares[i].innerHTML = '';
-        }
-        if ( i == 12) {
-            squares[i].innerHTML = '<img id="object-image-center" class="object-image" src="person.png">';
-        }
-        
-        squares[i].classList.add(tileClassNames[tiles[squaresCoords[i][0]][squaresCoords[i][1]]]);
-
-        if (checkKey(squaresCoords[i][0], squaresCoords[i][1])) {
-            squares[i].innerHTML = '<img class="object-image" src="key.png">';
-        }
-        if (squaresCoords[i][0] == treasureBox[0] && squaresCoords[i][1] == treasureBox[1]) {
-            squares[i].innerHTML =  '<img class="object-image" src="chest.png">';
-        }
-        if (dark) {
-            if (darkTiles.includes(i)) {
-                tileClassNames.forEach((className) => {
-                    squares[i].classList.remove(className);
-                })
-                squares[i].classList.add("dark");
-                squares[i].innerHTML = '';
-            }
-        }
-    })
-}*/
-
+//function for drawing sprites to canvas
 function drawTile (type, canvasx, canvasy) {
    switch (type) {
     case "wall":
@@ -290,8 +251,6 @@ function foundKey() {
             } 
         }
     } )
-    //objectImage.src = "key.png";
-    drawTile("key", 60, 60);
     text.innerHTML = "<p>You found a key!<p>";
     numberOfKeys++;
     text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
@@ -316,7 +275,6 @@ function checkKey(x, y) {
 }
 
 function foundChest() {
-    drawTile("chest", 60, 60);
     text.innerHTML = "<p>You found the treasure chest!<p>";
     if (numberOfKeys < boxKeys) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
@@ -325,13 +283,6 @@ function foundChest() {
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
     }
 }
-
-/*function warp(warpx,warpy) {
-    x = warpx;
-    y = warpy;
-    applySquaresCoords();
-    applyTileImages();
-}*/
 
 function disableButtons() {
     ButtonNorth.setAttribute("disabled", "disabled");
@@ -404,9 +355,6 @@ function updatePosition(direction) {
     }
     drawChara();
 }
-
-//await sheet load
-//await sheet.decode();
 
 // apply starting data
 drawBackground();
