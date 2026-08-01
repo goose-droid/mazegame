@@ -98,6 +98,46 @@ const warpB = [29, 29];
 // *** end map definition
 // variables/constants
 
+ButtonUseTorch.addEventListener("click", () => {
+    useTorch();
+})
+
+//listen for arrow keys toggle button
+ButtonToggleArrowKeys.addEventListener("click", () => {
+    if (arrowKeys) {
+        arrowKeys = false;
+        keysText.innerHTML = "Arrow key input disabled";
+    } else {
+        arrowKeys = true;
+        keysText.innerHTML = "Arrow key input enabled";
+    }
+})
+
+//listen for arrow keys if toggled
+
+    document.addEventListener("keydown", function(event)  {
+        if (arrowKeys) {
+            switch (event.key) {
+                case "ArrowLeft":
+                    event.preventDefault();
+                    ButtonWest.click();
+                    break;
+                case "ArrowUp":
+                    event.preventDefault();
+                    ButtonNorth.click();
+                    break;
+                case "ArrowRight":
+                    event.preventDefault();
+                    ButtonEast.click();
+                    break;
+                case "ArrowDown":
+                    event.preventDefault();
+                    ButtonSouth.click();
+                    break;
+            }
+        }
+    });
+
 let testing = false;
 let arrowKeys = false;
 let dark = true;
@@ -183,19 +223,19 @@ function drawTile (type, canvasx, canvasy) {
 
 
 //draw background
-function drawBackground(offset) {
+function drawBackground(xoffset, yoffset) {
     let j = 0;
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
         if (dark && darkTiles.includes(j)) {
-            drawTile("dark", (30 * k) + offset, (30 * i) + offset);
+            drawTile("dark", (30 * k) + xoffset, (30 * i) + yoffset);
         } else {
-            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k) + offset, (30 * i) + offset )
+            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k) + xoffset, (30 * i) + yoffset )
             if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
-            drawTile("key", (30 * k) + offset, (30 * i) + offset);
+            drawTile("key", (30 * k) + xoffset, (30 * i) + yoffset);
             }
             if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
-            drawTile("chest", (30 * k) + offset, (30 * i) + offset);
+            drawTile("chest", (30 * k) + xoffset, (30 * i) + yoffset);
             }
         }
         j++;
@@ -204,19 +244,44 @@ function drawBackground(offset) {
 }
 
 
-function scrollBackground() {
+function scrollBackground(direction) {
     disableButtons();
-    let offset = -30;
-    for (let t = 0; t < 30; t++) {
-        drawBackground(offset);
-        drawChara();
-        
-        let start = Date.now();
-        while (Date.now() - start < 30) {
-        // Busy waiting
-        }
-        offset++;
-    }        
+    let yoffset;
+    let xoffset;
+    switch(direction) {
+        case "n":
+            yoffset = 30;
+            for (let t = 0; t < 30; t++) {
+                drawBackground(0, yoffset);
+                drawChara();
+                yoffset--;
+            } 
+            break;
+        case "s":
+            yoffset = -30;
+            for (let t = 0; t < 30; t++) {
+                drawBackground(0, yoffset);
+                drawChara();
+                yoffset++;
+            }
+            break;
+        case "e":
+            xoffset = 30;
+            for (let t = 0; t < 30; t++) {
+                drawBackground(xoffset, 0);
+                drawChara();
+                xoffset--;
+            }
+            break;
+        case "w":
+            xoffset = -30;
+            for (let t = 0; t < 30; t++) {
+                drawBackground(xoffset, 0);
+                drawChara();
+                xoffset++;
+            }
+            break;
+    }     
     manageButtons();
 }
     
@@ -316,7 +381,7 @@ function useTorch(){
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
     dark = false;
-    drawBackground(0);
+    drawBackground(0, 0);
     drawChara();
 }
 
@@ -358,7 +423,7 @@ function updatePosition(direction) {
     }
     applySquaresCoords();
     manageButtons();
-    scrollBackground();
+    //scrollBackground();
     displayRoomData();
     //clear textbox
     text.innerHTML = "";
@@ -372,66 +437,67 @@ function updatePosition(direction) {
     drawChara();
 }
 
+function draw() {
+
+    if (northClicked) {
+        updatePosition("n");
+        northClicked = false;
+    } else if (southClicked) {
+        updatePosition("s");
+        southClicked = false;
+    } else if (eastClicked) {
+        updatePosition("e");
+        eastClicked =  false;
+    } else if (westClicked) {
+        updatePosition("w");
+        westClicked = false;
+    }
+
+    requestAnimationFrame(draw());
+}
+
 // apply starting data
-drawBackground(0);
+drawBackground(0, 0);
 drawChara();
 displayRoomData();
 manageButtons();
 keysText.innerHTML = "Arrow key input disabled";
 torchText.innerHTML = `Torches left: ${torches}`;
 
+//bools for click listening
+let northClicked = false;
+let southClicked = false;
+let eastClicked =  false;
+let westClicked = false;
+
 //listen for button presses to trigger updatePosition
 ButtonNorth.addEventListener("click", () => {
-    updatePosition("n");
+    northClicked = true;
+    southClicked = false;
+    eastClicked =  false;
+    westClicked = false;
+
 })
 ButtonSouth.addEventListener("click", () => {
-    updatePosition("s");
+    northClicked = false;
+    southClicked = true;
+    eastClicked =  false;
+    westClicked = false;
 })
 ButtonEast.addEventListener("click", () => {
-    updatePosition("e");
+    northClicked = false;
+    southClicked = false;
+    eastClicked =  true;
+    westClicked = false;
 })
 ButtonWest.addEventListener("click", () => {
-    updatePosition("w");
+    northClicked = false;
+    southClicked = false;
+    eastClicked =  false;
+    westClicked = true;
 })
 
 //listen for torch button
-ButtonUseTorch.addEventListener("click", () => {
-    useTorch();
-})
 
-//listen for arrow keys toggle button
-ButtonToggleArrowKeys.addEventListener("click", () => {
-    if (arrowKeys) {
-        arrowKeys = false;
-        keysText.innerHTML = "Arrow key input disabled";
-    } else {
-        arrowKeys = true;
-        keysText.innerHTML = "Arrow key input enabled";
-    }
-})
 
-//listen for arrow keys if toggled
-
-    document.addEventListener("keydown", function(event)  {
-        if (arrowKeys) {
-            switch (event.key) {
-                case "ArrowLeft":
-                    event.preventDefault();
-                    ButtonWest.click();
-                    break;
-                case "ArrowUp":
-                    event.preventDefault();
-                    ButtonNorth.click();
-                    break;
-                case "ArrowRight":
-                    event.preventDefault();
-                    ButtonEast.click();
-                    break;
-                case "ArrowDown":
-                    event.preventDefault();
-                    ButtonSouth.click();
-                    break;
-            }
-        }
-    });
-
+draw();
