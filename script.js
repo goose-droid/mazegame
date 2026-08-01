@@ -183,24 +183,41 @@ function drawTile (type, canvasx, canvasy) {
 
 
 //draw background
-function drawBackground() {
+function drawBackground(offset) {
     let j = 0;
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
         if (dark && darkTiles.includes(j)) {
-            drawTile("dark", 30 * k, 30 * i);
+            drawTile("dark", (30 * k) + offset, (30 * i) + offset);
         } else {
-            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
+            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k) + offset, (30 * i) + offset )
             if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
-            drawTile("key", 30 * k, 30 * i);
+            drawTile("key", (30 * k) + offset, (30 * i) + offset);
             }
             if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
-            drawTile("chest", 30 * k, 30 * i);
+            drawTile("chest", (30 * k) + offset, (30 * i) + offset);
             }
         }
         j++;
         }
     }       
+}
+
+
+function scrollBackground() {
+    disableButtons();
+    let offset = -30;
+    for (let t = 0; t < 30; t++) {
+        drawBackground(offset);
+        drawChara();
+        
+        let start = Date.now();
+        while (Date.now() - start < 30) {
+        // Busy waiting
+        }
+        offset++;
+    }        
+    manageButtons();
 }
     
     
@@ -299,7 +316,7 @@ function useTorch(){
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
     dark = false;
-    drawBackground();
+    drawBackground(0);
     drawChara();
 }
 
@@ -341,8 +358,7 @@ function updatePosition(direction) {
     }
     applySquaresCoords();
     manageButtons();
-    drawBackground();
-    //objectImage.src = "person.png";
+    scrollBackground();
     displayRoomData();
     //clear textbox
     text.innerHTML = "";
@@ -357,7 +373,7 @@ function updatePosition(direction) {
 }
 
 // apply starting data
-drawBackground();
+drawBackground(0);
 drawChara();
 displayRoomData();
 manageButtons();
