@@ -224,6 +224,12 @@ function drawBackground() {
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
         drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
+        if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
+            drawTile("key", 30 * k, 30 * i);
+        }
+        if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
+            drawTile("chest", 30 * k, 30 * i);
+        }
         j++;
       }
     }
@@ -275,7 +281,8 @@ function foundKey() {
             } 
         }
     } )
-    objectImage.src = "key.png";
+    //objectImage.src = "key.png";
+    drawTile("key", 60, 60);
     text.innerHTML = "<p>You found a key!<p>";
     numberOfKeys++;
     text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
@@ -300,7 +307,7 @@ function checkKey(x, y) {
 }
 
 function foundChest() {
-    objectImage.src = "chest.png";
+    drawTile("chest", 60, 60);
     text.innerHTML = "<p>You found the treasure chest!<p>";
     if (numberOfKeys < boxKeys) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
@@ -374,7 +381,6 @@ function updatePosition(direction) {
     applySquaresCoords();
     manageButtons();
     drawBackground();
-    drawChara();
     //objectImage.src = "person.png";
     displayRoomData();
     //clear textbox
@@ -386,6 +392,7 @@ function updatePosition(direction) {
     if (x == treasureBox[0] && y == treasureBox[1]) {
         foundChest();
     }
+    drawChara();
 }
 
 //await sheet load
