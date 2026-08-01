@@ -211,8 +211,11 @@ function drawTile (type, canvasx, canvasy) {
     case "chest":
       ctx.drawImage(sheet, 90, 30, 30, 30, canvasx, canvasy, 30, 30);
       break;
+    case "dark":
+        ctx.fillRect(canvasx, canvasy, 30, 30);
+        break;
     default:
-      ctx.drawImage(sheet, 0, 0, 30, 30, canvasx, canvasy, 30, 30);
+      ctx.drawImage(sheet, 0, 0, 20, 20, canvasx, canvasy, 30, 30);
       break;
    }
   }
@@ -223,17 +226,23 @@ function drawBackground() {
     let j = 0;
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
-        drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
-        if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
+        if (dark && darkTiles.includes(j)) {
+            drawTile("dark", 30 * k, 30 * i);
+        } else {
+            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
+            if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
             drawTile("key", 30 * k, 30 * i);
-        }
-        if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
+            }
+            if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
             drawTile("chest", 30 * k, 30 * i);
+            }
         }
         j++;
-      }
-    }
+        }
+    }       
 }
+    
+    
 
 //draw character
 function drawChara() {
@@ -339,7 +348,8 @@ function useTorch(){
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
     dark = false;
-    applyTileImages();
+    drawBackground();
+    drawChara();
 }
 
 //handles movement, updating the pictures, refreshing the
