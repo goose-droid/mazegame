@@ -101,6 +101,7 @@ const warpB = [29, 29];
 let testing = false;
 let arrowKeys = false;
 let dark = true;
+let lessDark = false;
 let torches = 5;
 let torchSteps = 0;
 
@@ -110,7 +111,8 @@ const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall",
 const boxKeys = keys.length;
 
 //tiles that are dark when dark
-const darkTiles = [0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24];
+const darkTiles = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
+const lessDarkTiles = [0, 1, 2, 3, 4, 5, 9, 10, 14, 15, 19, 20, 21, 22, 23, 24]
 
 //generate flags for picking up keys
 const keyFlags = [];
@@ -187,7 +189,10 @@ function drawBackground() {
     let j = 0;
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
-        if (dark && darkTiles.includes(j)) {
+        if (lessDark && lessDarkTiles.includes(j)) {
+            drawTile("dark", 30 * k, 30 * i);
+        }
+        else if (dark && darkTiles.includes(j)) {
             drawTile("dark", 30 * k, 30 * i);
         } else {
             drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
@@ -294,11 +299,13 @@ function disableButtons() {
 
 function useTorch(){
     torches--;
+    torchSteps = 0;
     torchText.innerHTML = `Torches left: ${torches}`;
     if (torches < 1) {
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
     dark = false;
+    lessDark = false;
     drawBackground();
     drawChara();
 }
@@ -335,7 +342,11 @@ function updatePosition(direction) {
     if (!dark) {
         torchSteps++;
     }
-    if (torchSteps > 16) {
+    if (torchSteps > 40 && torchSteps < 71) {
+        lessDark = true;
+    }
+    if (torchSteps > 70) {
+        lessDark = false;
         dark = true;
         torchSteps = 0;
     }
