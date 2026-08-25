@@ -185,22 +185,22 @@ function drawTile (type, canvasx, canvasy) {
 
 
 //draw background
-function drawBackground() {
+function drawBackground(xoffset, yoffset) {
     let j = 0;
     for (let i = 0; i < 5; i++) {
       for (let k = 0; k < 5; k++) {
         if (lessDark && lessDarkTiles.includes(j)) {
-            drawTile("dark", 30 * k, 30 * i);
+            drawTile("dark", (30 * k) + xoffset, (30 * i) + yoffset);
         }
         else if (dark && darkTiles.includes(j)) {
-            drawTile("dark", 30 * k, 30 * i);
+            drawTile("dark", (30 * k) + xoffset, (30 * i) + yoffset);
         } else {
-            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], 30 * k, 30 * i )
+            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k) + xoffset, (30 * i) + yoffset )
             if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
-            drawTile("key", 30 * k, 30 * i);
+            drawTile("key", (30 * k) + xoffset, (30 * i) + yoffset);
             }
             if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
-            drawTile("chest", 30 * k, 30 * i);
+            drawTile("chest", (30 * k) + xoffset, (30 * i) + yoffset);
             }
         }
         j++;
@@ -225,6 +225,9 @@ function displayRoomData() {
 //turns buttons on or off depending on what tile types
 //lie to the north/south/east/west
 function manageButtons() {
+    if (torches > 0) {
+        ButtonUseTorch.removeAttribute("disabled");
+    }
     if (tiles[x][y+1] % 2) {
         ButtonNorth.removeAttribute("disabled");
     } else {
@@ -306,27 +309,68 @@ function useTorch(){
     };
     dark = false;
     lessDark = false;
-    drawBackground();
+    drawBackground(0, 0);
     drawChara();
+}
+
+function scrollBackground (xoffset , yoffset) {
+
+    return new Promise((resolve) => {
+        
+        function loop() {
+            drawBackground(xoffset, yoffset);
+            drawChara();
+
+            if (xoffset > 0) {
+                xoffset--;
+            } else if (xoffset < 0) {
+                xoffset++;
+            }
+            if (yoffset > 0) {
+                yoffset--;
+            } else if (yoffset < 0) {
+                yoffset++;
+            }
+
+            if (xoffset !== 0 || yoffset !==0) {
+                setTimeout(() => {
+                    requestAnimationFrame(loop);
+                }, 1000 / 100);
+                
+            } else {
+                resolve("scrolling done");
+            }
+        }
+        
+        requestAnimationFrame(loop);
+
+    });
 }
 
 //handles movement, updating the pictures, refreshing the
 //object picture to default, managing buttons, clearing
 //the text box, and checking for keys or box on new tile
 //basically the main function of the puzzle
-function updatePosition(direction) {
+async function updatePosition(direction) {
+    disableButtons();
+    let yoffset = 0;
+    let xoffset = 0;
     switch(direction) {
         case "n":
             y++;
+            yoffset = -30;
             break;
         case "s":
             y--;
+            yoffset = +30;
             break;
         case "e":
             x++;
+            xoffset = +30;
             break;
         case "w":
             x--;
+            xoffset = -30;
             break;
     }
     currentTyleType = tiles[x][y];
@@ -351,8 +395,9 @@ function updatePosition(direction) {
         torchSteps = 0;
     }
     applySquaresCoords();
-    manageButtons();
-    drawBackground();
+    const message = await scrollBackground(xoffset, yoffset);
+    console.log(message);
+    //drawBackground(0, 0);
     //objectImage.src = "person.png";
     displayRoomData();
     //clear textbox
@@ -365,10 +410,11 @@ function updatePosition(direction) {
         foundChest();
     }
     drawChara();
+    manageButtons();
 }
 
 // apply starting data
-drawBackground();
+drawBackground(0, 0);
 drawChara();
 displayRoomData();
 manageButtons();
