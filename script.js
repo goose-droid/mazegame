@@ -112,11 +112,6 @@ const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall",
 //number of keys to open box
 const boxKeys = keys.length;
 
-//tiles that are dark when dark
-const alwaysDarkTiles = [0, 1, 2, 3, 4, 5, 6, 7, 13, 14, 20, 21, 27, 28, 34, 35, 41, 42, 43, 44, 45, 46, 47, 48]
-const lessDarkTiles = [8, 9, 10, 11, 12, 15, 19, 22, 26, 29, 33, 36, 37, 38, 39, 40]
-const darkTiles = [8, 9, 10, 11, 12, 15, 19, 22, 26, 29, 33, 36, 37, 38, 39, 40, 16, 17, 18, 23, 25, 30, 31, 32];
-
 //generate flags for picking up keys
 const keyFlags = [];
 keys.forEach((location) => {
