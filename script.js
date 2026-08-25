@@ -106,6 +106,7 @@ let dark = true;
 let lessDark = false;
 let torches = 5;
 let torchSteps = 0;
+let gameover = false;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
@@ -314,7 +315,7 @@ function foundChest() {
     if (numberOfKeys < boxKeys) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
     } else {
-        disableButtons();
+        gameover = true;
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
     }
 }
@@ -362,15 +363,13 @@ function scrollBackground (xoffset , yoffset) {
             if (xoffset !== 0 || yoffset !==0) {
                 setTimeout(() => {
                     requestAnimationFrame(loop);
-                }, 1000 / 100);
+                }, 1000 / 210);
                 
             } else {
                 resolve("scrolling done");
             }
-        }
-        
+        }       
         requestAnimationFrame(loop);
-
     });
 }
 
@@ -442,7 +441,9 @@ async function updatePosition(direction) {
         foundChest();
     }
     drawChara();
-    manageButtons();
+    if (!gameover) {
+        manageButtons();
+    }
 }
 
 // apply starting data
