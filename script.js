@@ -336,6 +336,7 @@ function checkObjects() {
 //turns buttons on or off depending on what tile types
 //lie to the north/south/east/west
 function manageButtons() {
+    ButtonToggleArrowKeys.removeAttribute("disabled");
     if (torches > 0) {
         ButtonUseTorch.removeAttribute("disabled");
     }
@@ -499,19 +500,29 @@ async function updatePosition(direction) {
     }
 }
 
-//set starting position
-x = objectcoords[0][0];
-y = objectcoords[0][1];
 
-//run squarescoords function the first time to set up starting coords
-applySquaresCoords();
-// apply starting data
-drawBackground(0, 0);
-drawChara();
-displayRoomData();
-manageButtons();
-keysText.innerHTML = "Arrow key input disabled";
-torchText.innerHTML = `Torches left: ${torches}`;
+//actual program running below
+
+//start up sequence, executes after spritesheet loads
+window.onload = (event) => {
+
+    //set starting position
+    x = objectcoords[0][0];
+    y = objectcoords[0][1];
+
+    //run squarescoords function the first time to set up starting coords
+    applySquaresCoords();
+    // apply starting data
+    drawBackground(0, 0);
+    drawChara();
+    displayRoomData();
+    manageButtons();
+
+    keysText.innerHTML = "Arrow key input disabled";
+    torchText.innerHTML = `Torches left: ${torches}`;
+}
+
+//button listeners
 
 //listen for button presses to trigger updatePosition
 ButtonNorth.addEventListener("click", () => {
