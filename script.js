@@ -503,23 +503,26 @@ async function updatePosition(direction) {
 
 //actual program running below
 
-//start up sequence, executes after spritesheet loads
-window.onload = (event) => {
+//start up sequence
 
-    //set starting position
+//set starting position
     x = objectcoords[0][0];
     y = objectcoords[0][1];
 
-    //run squarescoords function the first time to set up starting coords
-    applySquaresCoords();
+//run squarescoords function the first time to set up starting coords
+applySquaresCoords();
+
+displayRoomData();
+manageButtons();
+
+keysText.innerHTML = "Arrow key input disabled";
+torchText.innerHTML = `Torches left: ${torches}`;
+
+//draw starting position after spritesheet loads
+window.onload = (event) => {
     // apply starting data
     drawBackground(0, 0);
     drawChara();
-    displayRoomData();
-    manageButtons();
-
-    keysText.innerHTML = "Arrow key input disabled";
-    torchText.innerHTML = `Torches left: ${torches}`;
 }
 
 //button listeners
