@@ -29,7 +29,18 @@ const torchText = document.querySelector("#torch-count");
 // this section may in the future be broken off in some way
 // to allow for multiple mazes
 
-// map layout. the index of the outer array is x
+// map data. 
+// first array contains the width of the map (eg. number of arrays)
+// and the name of the map.
+// then there are a series of arrays connected by index, covering
+// object info. the first array is object coordinates,
+// the second array is object type, the third array is
+// necessary data for the object, if applicable.
+// the fourth array defines the object's sprite
+// the first object is always the start coordinates
+// (for boxes, the number of keys needed to open, and
+// for warps, the warp destination)
+// once the layout is sliced, the index of the outer array is x
 // the indices of the inner arrays are y
 // the elements in the inner arrays are tiles
 // 0 = wall, 1 = path, 2 = water, 3 = stairs (path for now),
@@ -37,7 +48,12 @@ const torchText = document.querySelector("#torch-count");
 // 7 = mossy floor, 8 = unused (wall), 9 = grass
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
-const tiles = [
+const originalmaze = [
+    [37, "Original Maze"],
+    [ [5, 32], [20, 29], [8, 28],[7, 5], [16, 15], [29, 5], [31, 25], [7, 15], [31, 31]],
+    [ "start", "box", "key", "key", "key", "key", "key", "warp", "warp"],
+    [ null, 5, null, null, null, null, null, [31, 31], [7, 15]],
+    [ null, "box", "key", "key", "key", "key", "key", null, null],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -78,7 +94,7 @@ const tiles = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
-// key locations. [x, y]
+/* key locations. [x, y]
 const keys = [
     [8, 28],
     [7, 5], 
@@ -97,7 +113,7 @@ const startingPosition = [5, 32];
 const warpA = [7, 15];
 
 //warp B format [x, y]
-const warpB = [31, 31];
+const warpB = [31, 31];*/
 
 // *** end map definition
 // variables/constants
@@ -109,31 +125,62 @@ let lessDark = false;
 let torches = 5;
 let torchSteps = 0;
 let gameover = false;
+let y = 0;
+let x = 0;
+let numberofkeys = 0;
+let boxKeys = 0;
+let keyFlags = [];
+let squaresCoords = [];
+let tiles = [];
+let objectcoords = [];
+let objecttypes = [];
+let objectinfos = [];
+let mapname = "default";
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
-//number of keys to open box
-const boxKeys = keys.length;
 
-//generate flags for picking up keys
-const keyFlags = [];
+/*
 keys.forEach((location) => {
     keyFlags.push(1);
-})
-
-//starting coordinates, tile type, key numbers
-let x = startingPosition[0];
-let y = startingPosition[1];
-//currenTileType needs to be updated every time x or y is
-let currentTileType = tiles[x][y]; 
-let numberOfKeys = 0;
-
-//define coordinates of squares. index matches squares index
-//set in later function
-let squaresCoords = [];
+})*/
 
 
 ///*** Functions */
+
+//function to load map
+function loadMap(map) {
+    //slice layout
+    tiles = map.slice(-1 * (map[0][0]));
+
+    mapname = map[0][1];
+    console.log(mapname);
+
+    //slice object arrays
+    objectcoords = map[1];
+    objecttypes = map[2];
+    objectinfos = map[3];
+    objectsprites = map[4];
+}
+
+// removing pickup objects from objecttypes array
+// so they can't be picked up more than once
+function pickup(objectindex) {
+    switch (objecttypes[objectindex]){
+        case "key":
+            numberofkeys++;
+            text.innerHTML = "<p>You found a key!<p>";
+            text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
+            break;
+        default:
+            alert("error: picked up item type without switch case in pickup()");
+            break;
+    }
+    objecttypes.splice(objectindex, 1, null);
+    objectcoords.splice(objectindex, 1, null);
+}
+
+loadMap(originalmaze);
 
 //function to set up squaresCoords
 function applySquaresCoords() {
@@ -169,7 +216,7 @@ function drawTile (type, canvasx, canvasy) {
     case "key":
       ctx.drawImage(sheet, 60, 30, 30, 30, canvasx, canvasy, 30, 30);
       break;
-    case "chest":
+    case "box":
       ctx.drawImage(sheet, 90, 30, 30, 30, canvasx, canvasy, 30, 30);
       break;
     case "dark":
@@ -215,13 +262,23 @@ function drawBackground(xoffset, yoffset) {
       for (let k = 0; k < 7; k++) {
         //apply map tiles
         drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
+        
+        //apply object sprites if applicable
+        if (objectcoords.includes([squaresCoords[j][0]][squaresCoords[j][1]])) {
+            let objectindex = objectcoords.indexOf([squaresCoords[j][0]][squaresCoords[j][1]]);
+            if (objectsprites[objectindex]) {
+                drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
+            }
+        }
+            /*
         //apply key and chest sprites
         if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
         drawTile("key", (30 * k)  + xoffset, (30 * i)  + yoffset);
         }
         if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
         drawTile("chest", (30 * k)  + xoffset, (30 * i)  + yoffset);
-        }
+        } */
+
         //apply darkness
         if (dark && !lessDark) {
             drawDark();
@@ -249,6 +306,28 @@ function displayRoomData() {
     };
 }
 
+function checkObjects(x, y) {
+    if (objectcoords.includes([x, y])){
+        let objectindex = objectcoords.indexOf([x, y]);
+        switch(objecttypes[objectindex]) {
+            case "key":
+                pickup(objectindex);
+                break;
+            case "box":
+                foundChest();
+                break;
+            case "warp":
+                x = objectinfos[objectindex][0];
+                y = objectinfos[objectindex][1];
+                applySquaresCoords();
+                drawBackground(0,0);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 //turns buttons on or off depending on what tile types
 //lie to the north/south/east/west
 function manageButtons() {
@@ -274,38 +353,6 @@ function manageButtons() {
         ButtonWest.removeAttribute("disabled");
     } else {
         ButtonWest.setAttribute("disabled", "disabled");
-    }
-}
-
-function foundKey() {
-    keys.forEach((location, i) => {
-        if (x == location[0] && y == location[1]) {
-            //flip key flag 
-            if (keyFlags[i]) {
-                keyFlags[i] = 0
-            } 
-        }
-    } )
-    text.innerHTML = "<p>You found a key!<p>";
-    numberOfKeys++;
-    text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
-}
-
-function checkKey(x, y) {
-    let keySeen = false;
-    //its silly that this code is repeated from foundKey() but can't figure out how else to manage it
-    keys.forEach((location, i) => {
-        if (x == location[0] && y == location[1]) {
-            //check if key was already picked up
-            if (keyFlags[i]) {
-                keySeen = true;
-            } 
-        }
-    } )
-    if (keySeen) {
-        return true;
-    } else {
-        return false;
     }
 }
 
@@ -398,7 +445,7 @@ async function updatePosition(direction) {
             xoffset = -30;
             break;
     }
-    currentTyleType = tiles[x][y];
+    //currentTyleType = tiles[x][y];
      
     if (!dark) {
         torchSteps++;
@@ -417,7 +464,9 @@ async function updatePosition(direction) {
     //drawBackground(0, 0);
     //objectImage.src = "person.png";
     displayRoomData();
-    if (currentTyleType === 5){
+    //clear textbox
+    text.innerHTML = "";
+    /*if (currentTyleType === 5){
         if (x === warpA[0] && y === warpA[1]) {
             x = warpB[0];
             y = warpB[1];
@@ -430,20 +479,24 @@ async function updatePosition(direction) {
             drawBackground(0,0);
         }
     }
-    //clear textbox
-    text.innerHTML = "";
     //check for keys and box
     if (checkKey(x, y)) {
         foundKey();
     };
     if (x == treasureBox[0] && y == treasureBox[1]) {
         foundChest();
-    }
+    }*/
+   //check for objects
+
     drawChara();
     if (!gameover) {
         manageButtons();
     }
 }
+
+//set starting position
+x = objectinfos[0][0];
+y = objectinfos[0][1];
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
