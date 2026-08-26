@@ -182,7 +182,7 @@ function pickup(objectindex) {
             break;
     }
     objecttypes.splice(objectindex, 1, null);
-    objectcoords.splice(objectindex, 1, null);
+    objectcoords.splice(objectindex, 1, [100, 100]);
 }
 
 loadMap(originalmaze);
@@ -319,7 +319,7 @@ function checkObjects() {
                 pickup(objectindex);
                 break;
             case "box":
-                foundChest();
+                foundChest(objectindex);
                 break;
             case "warp":
                 x = objectinfos[objectindex][0];
@@ -361,9 +361,9 @@ function manageButtons() {
     }
 }
 
-function foundChest() {
+function foundChest(objectindex) {
     text.innerHTML = "<p>You found the treasure chest!<p>";
-    if (numberOfKeys < boxKeys) {
+    if (numberOfKeys < objectinfos[objectindex]) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
     } else {
         gameover = true;
@@ -414,7 +414,7 @@ function scrollBackground (xoffset , yoffset) {
             if (xoffset != 0 || yoffset != 0) {
                 setTimeout(() => {
                     requestAnimationFrame(loop);
-                }, 1000 / 210);
+                }, 1000/60);
                 
             } else {
                 resolve("scrolling done");
