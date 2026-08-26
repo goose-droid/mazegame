@@ -1,35 +1,7 @@
-///*** creating constants for document elements */
+// *******************************************************
+// ************* map data ****************
+// *******************************************************
 
-//directional buttons
-const ButtonNorth = document.querySelector("#ButtonNorth");
-const ButtonSouth = document.querySelector("#ButtonSouth");
-const ButtonEast = document.querySelector("#ButtonEast");
-const ButtonWest = document.querySelector("#ButtonWest");
-
-//arrow keys toggle button
-const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
-
-//use torch button
-const ButtonUseTorch = document.querySelector("#use-torch");
-
-//sprite sheet
-const sheet = document.getElementById("source");
-
-//canvas 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
-
-//text
-const roomstats = document.querySelector("#roomstats");
-const text = document.querySelector("#text");
-const keysText = document.querySelector("#arrow-keys-status");
-const torchText = document.querySelector("#torch-count");
-
-// *** Map definition 
-// this section may in the future be broken off in some way
-// to allow for multiple mazes
-
-// map data. 
 // first array contains the width of the map (eg. number of arrays)
 // and the name of the map.
 // then there are a series of arrays connected by index, covering
@@ -94,29 +66,39 @@ const originalmaze = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
-/* key locations. [x, y]
-const keys = [
-    [8, 28],
-    [7, 5], 
-    [16, 15],
-    [29, 5],
-    [31, 25]
-];
-
-// location of treasure box. format [x, y]
-const treasureBox = [20, 29];
-
-// starting location. format [x, y]
-const startingPosition = [5, 32];
-
-//warp A format [x, y]
-const warpA = [7, 15];
-
-//warp B format [x, y]
-const warpB = [31, 31];*/
 
 // *** end map definition
-// variables/constants
+
+// *******************************************************
+// ************* global variables/constants **************
+// *******************************************************
+
+//creating constants for document elements
+
+//directional buttons
+const ButtonNorth = document.querySelector("#ButtonNorth");
+const ButtonSouth = document.querySelector("#ButtonSouth");
+const ButtonEast = document.querySelector("#ButtonEast");
+const ButtonWest = document.querySelector("#ButtonWest");
+
+//arrow keys toggle button
+const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
+
+//use torch button
+const ButtonUseTorch = document.querySelector("#use-torch");
+
+//sprite sheet
+const sheet = document.getElementById("source");
+
+//canvas 
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+//text
+const roomstats = document.querySelector("#roomstats");
+const text = document.querySelector("#text");
+const keysText = document.querySelector("#arrow-keys-status");
+const torchText = document.querySelector("#torch-count");
 
 let testing = false;
 let arrowKeys = false;
@@ -140,15 +122,10 @@ let mapname = "default";
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
 
-/*
-keys.forEach((location) => {
-    keyFlags.push(1);
-})*/
+// *******************************************************
+// ********************* functions  **********************
+// *******************************************************
 
-
-///*** Functions */
-
-//function to load map
 function loadMap(map) {
     //slice layout
     tiles = map.slice(-1 * (map[0][0]));
@@ -182,10 +159,8 @@ function pickup(objectindex) {
             break;
     }
     objecttypes.splice(objectindex, 1, null);
-    objectcoords.splice(objectindex, 1, [100, 100]);
+    objectcoords.splice(objectindex, 1, [100, 100]); //has to be coordinates or findIndex doesn't work later
 }
-
-loadMap(originalmaze);
 
 //function to set up squaresCoords
 function applySquaresCoords() {
@@ -264,41 +239,31 @@ function drawBackground(xoffset, yoffset) {
     let j = 0;
     //let light = true;
     for (let i = 0; i < 7; i++) {
-      for (let k = 0; k < 7; k++) {
-        //apply map tiles
-        drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
-        
-        //apply object sprites if applicable
-        let objectindex = objectcoords.findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
-        if (objectindex != -1) {
-            if (objectsprites[objectindex]) {
-                drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
+        for (let k = 0; k < 7; k++) {
+            //apply map tiles
+            drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
+            
+            //apply object sprites if applicable
+            let objectindex = objectcoords.findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
+            if (objectindex != -1) {
+                if (objectsprites[objectindex]) {
+                    drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
+                }
             }
-        }
-            /*
-        //apply key and chest sprites
-        if (checkKey(squaresCoords[j][0], squaresCoords[j][1])) {
-        drawTile("key", (30 * k)  + xoffset, (30 * i)  + yoffset);
-        }
-        if (squaresCoords[j][0] == treasureBox[0] && squaresCoords[j][1] == treasureBox[1]) {
-        drawTile("chest", (30 * k)  + xoffset, (30 * i)  + yoffset);
-        } */
 
-        //apply darkness
-        if (dark && !lessDark) {
-            drawDark();
-        } else if (lessDark) {
-            drawLessDark();
-        } else {
-            drawFrame();
-        }
-        j++;
+            //apply darkness
+            if (dark && !lessDark) {
+                drawDark();
+            } else if (lessDark) {
+                drawLessDark();
+            } else {
+                drawFrame();
+            }
+            j++;
         }
     }       
 }
     
-    
-
 //draw character
 function drawChara() {
     drawTile("person", 90, 90);
@@ -312,7 +277,9 @@ function displayRoomData() {
 }
 
 function checkObjects() {
+    //see if there is an object at x, y by trying to assign the index for it. 
     let objectindex = objectcoords.findIndex(target => target[0] === x && target[1] === y);
+    //findIndex returns -1 if target not in array
     if (objectindex != -1){
         switch(objecttypes[objectindex]) {
             case "key":
@@ -328,6 +295,7 @@ function checkObjects() {
                 drawBackground(0,0);
                 break;
             default:
+                console.log("error: no case for this type of object in checkObjects switch");
                 break;
         }
     }
@@ -415,7 +383,7 @@ function scrollBackground (xoffset , yoffset) {
             if (xoffset != 0 || yoffset != 0) {
                 setTimeout(() => {
                     requestAnimationFrame(loop);
-                }, 1000/60);
+                }, 1000/60); //1000/x where x is targeted fps
                 
             } else {
                 resolve("scrolling done");
@@ -472,26 +440,6 @@ async function updatePosition(direction) {
     displayRoomData();
     //clear textbox
     text.innerHTML = "";
-    /*if (currentTyleType === 5){
-        if (x === warpA[0] && y === warpA[1]) {
-            x = warpB[0];
-            y = warpB[1];
-            applySquaresCoords();
-            drawBackground(0,0);
-        } else if (x === warpB[0] && y === warpB[1]) {
-            x = warpA[0];
-            y = warpA[1];
-            applySquaresCoords();
-            drawBackground(0,0);
-        }
-    }
-    //check for keys and box
-    if (checkKey(x, y)) {
-        foundKey();
-    };
-    if (x == treasureBox[0] && y == treasureBox[1]) {
-        foundChest();
-    }*/
    //check for objects
     checkObjects();
     drawChara();
@@ -500,14 +448,17 @@ async function updatePosition(direction) {
     }
 }
 
-
-//actual program running below
+// *******************************************************
+// ************* actual program execution ****************
+// *******************************************************
 
 //start up sequence
 
+loadMap(originalmaze);
+
 //set starting position
-    x = objectcoords[0][0];
-    y = objectcoords[0][1];
+x = objectcoords[0][0];
+y = objectcoords[0][1];
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
@@ -559,26 +510,25 @@ ButtonToggleArrowKeys.addEventListener("click", () => {
 
 //listen for arrow keys if toggled
 
-    document.addEventListener("keydown", function(event)  {
-        if (arrowKeys) {
-            switch (event.key) {
-                case "ArrowLeft":
-                    event.preventDefault();
-                    ButtonWest.click();
-                    break;
-                case "ArrowUp":
-                    event.preventDefault();
-                    ButtonNorth.click();
-                    break;
-                case "ArrowRight":
-                    event.preventDefault();
-                    ButtonEast.click();
-                    break;
-                case "ArrowDown":
-                    event.preventDefault();
-                    ButtonSouth.click();
-                    break;
-            }
+document.addEventListener("keydown", function(event)  {
+    if (arrowKeys) {
+        switch (event.key) {
+            case "ArrowLeft":
+                event.preventDefault();
+                ButtonWest.click();
+                break;
+            case "ArrowUp":
+                event.preventDefault();
+                ButtonNorth.click();
+                break;
+            case "ArrowRight":
+                event.preventDefault();
+                ButtonEast.click();
+                break;
+            case "ArrowDown":
+                event.preventDefault();
+                ButtonSouth.click();
+                break;
         }
-    });
-
+    }
+});
