@@ -49,7 +49,7 @@ const torchText = document.querySelector("#torch-count");
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
 const originalmaze = [
-    [37, "Original Maze"],
+    [38, "Original Maze"],
     [ [5, 32], [20, 29], [8, 28],[7, 5], [16, 15], [29, 5], [31, 25], [7, 15], [31, 31]],
     [ "start", "box", "key", "key", "key", "key", "key", "warp", "warp"],
     [ null, 5, null, null, null, null, null, [31, 31], [7, 15]],
@@ -127,7 +127,7 @@ let torchSteps = 0;
 let gameover = false;
 let y = 0;
 let x = 0;
-let numberofkeys = 0;
+let numberOfKeys = 0;
 let boxKeys = 0;
 let keyFlags = [];
 let squaresCoords = [];
@@ -152,6 +152,7 @@ keys.forEach((location) => {
 function loadMap(map) {
     //slice layout
     tiles = map.slice(-1 * (map[0][0]));
+    console.log(tiles);
 
     mapname = map[0][1];
     console.log(mapname);
@@ -161,6 +162,10 @@ function loadMap(map) {
     objecttypes = map[2];
     objectinfos = map[3];
     objectsprites = map[4];
+    console.log(objectcoords);
+    console.log(objecttypes);
+    console.log(objectinfos);
+    console.log(objectsprites);
 }
 
 // removing pickup objects from objecttypes array
@@ -168,7 +173,7 @@ function loadMap(map) {
 function pickup(objectindex) {
     switch (objecttypes[objectindex]){
         case "key":
-            numberofkeys++;
+            numberOfKeys++;
             text.innerHTML = "<p>You found a key!<p>";
             text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
             break;
@@ -264,8 +269,8 @@ function drawBackground(xoffset, yoffset) {
         drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
         
         //apply object sprites if applicable
-        if (objectcoords.includes([squaresCoords[j][0]][squaresCoords[j][1]])) {
-            let objectindex = objectcoords.indexOf([squaresCoords[j][0]][squaresCoords[j][1]]);
+        let objectindex = objectcoords.findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
+        if (objectindex != -1) {
             if (objectsprites[objectindex]) {
                 drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
             }
@@ -306,9 +311,9 @@ function displayRoomData() {
     };
 }
 
-function checkObjects(x, y) {
-    if (objectcoords.includes([x, y])){
-        let objectindex = objectcoords.indexOf([x, y]);
+function checkObjects() {
+    let objectindex = objectcoords.findIndex(target => target[0] === x && target[1] === y);
+    if (objectindex != -1){
         switch(objecttypes[objectindex]) {
             case "key":
                 pickup(objectindex);
@@ -406,7 +411,7 @@ function scrollBackground (xoffset , yoffset) {
                 yoffset++;
             }
 
-            if (xoffset !== 0 || yoffset !==0) {
+            if (xoffset != 0 || yoffset != 0) {
                 setTimeout(() => {
                     requestAnimationFrame(loop);
                 }, 1000 / 210);
@@ -487,7 +492,7 @@ async function updatePosition(direction) {
         foundChest();
     }*/
    //check for objects
-
+    checkObjects();
     drawChara();
     if (!gameover) {
         manageButtons();
@@ -495,8 +500,8 @@ async function updatePosition(direction) {
 }
 
 //set starting position
-x = objectinfos[0][0];
-y = objectinfos[0][1];
+x = objectcoords[0][0];
+y = objectcoords[0][1];
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
