@@ -87,6 +87,9 @@ const ButtonToggleArrowKeys = document.querySelector("#toggle-arrow-keys");
 //use torch button
 const ButtonUseTorch = document.querySelector("#use-torch");
 
+//continue button
+const ButtonContinue = document.querySelector("#continue");
+
 //sprite sheet
 const sheet = document.getElementById("source");
 
@@ -124,6 +127,7 @@ let objectcoords = [];
 let objecttypes = [];
 let objectinfos = [];
 let mapname = "default";
+let locked = false;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
@@ -156,6 +160,7 @@ function loadMap(map) {
 function pickup(objectindex) {
     switch (objecttypes[objectindex]){
         case "key":
+            //eventLock();
             drawRightImage(img_key);
             numberOfKeys++;
             text.innerHTML = "<p>You found a key!<p>";
@@ -178,6 +183,14 @@ function applySquaresCoords() {
         }
     }
 }
+
+//locks the directional keys and the torch button until click continue
+function eventLock() {
+    locked = true;
+    disableButtons();
+    ButtonContinue.removeAttribute("disabled");
+}
+
 
 //function for clearing right canvas
 function clearRightCanvas() {
@@ -322,6 +335,7 @@ function checkObjects() {
 //turns buttons on or off depending on what tile types
 //lie to the north/south/east/west
 function manageButtons() {
+    ButtonContinue.setAttribute("disabled", "disabled");
     ButtonToggleArrowKeys.removeAttribute("disabled");
     if (torches > 0) {
         ButtonUseTorch.removeAttribute("disabled");
@@ -352,6 +366,7 @@ function foundChest(objectindex) {
     text.innerHTML = "<p>You found the treasure chest!<p>";
     drawRightImage(img_chest);
     if (numberOfKeys < objectinfos[objectindex]) {
+        //eventLock();
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${objectinfos[objectindex]} keys to open the box.</p>`;
     } else {
         gameover = true;
@@ -418,7 +433,6 @@ function scrollBackground (xoffset , yoffset) {
 //basically the main function of the puzzle
 async function updatePosition(direction) {
     disableButtons();
-    clearRightCanvas();
     let yoffset = 0;
     let xoffset = 0;
     switch(direction) {
@@ -458,12 +472,13 @@ async function updatePosition(direction) {
     //drawBackground(0, 0);
     //objectImage.src = "person.png";
     displayRoomData();
-    //clear textbox
+    //clear textbox and right canvas
+    clearRightCanvas();
     text.innerHTML = "";
    //check for objects
     checkObjects();
     drawChara();
-    if (!gameover) {
+    if (!gameover && !locked) {
         manageButtons();
     }
 }
@@ -484,9 +499,8 @@ y = objectcoords[0][1];
 applySquaresCoords();
 
 displayRoomData();
-manageButtons();
 
-keysText.innerHTML = "Arrow key input disabled";
+keysText.innerHTML = "Keyboard input disabled";
 torchText.innerHTML = `Torches left: ${torches}`;
 
 //draw starting position after spritesheet loads
@@ -494,6 +508,8 @@ window.onload = (event) => {
     // apply starting data
     drawBackground(0, 0);
     drawChara();
+    eventLock();
+    text.innerHTML = "<p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move. If you toggle on keyboard controls, use the arrow keys to move, the enter key to \"continue\", and t to use a torch.</p>";
 }
 
 //button listeners
@@ -521,14 +537,21 @@ ButtonUseTorch.addEventListener("click", () => {
 ButtonToggleArrowKeys.addEventListener("click", () => {
     if (arrowKeys) {
         arrowKeys = false;
-        keysText.innerHTML = "Arrow key input disabled";
+        keysText.innerHTML = "Keyboard input disabled";
     } else {
         arrowKeys = true;
-        keysText.innerHTML = "Arrow key input enabled";
+        keysText.innerHTML = "Keyboard input enabled";
     }
 })
 
-//listen for arrow keys if toggled
+//listen for continue button
+ButtonContinue.addEventListener("click", () => {
+    locked = false;
+    manageButtons();
+    text.innerHTML = "";
+})
+
+//listen for keyboard keys if toggled
 
 document.addEventListener("keydown", function(event)  {
     if (arrowKeys) {
@@ -548,6 +571,18 @@ document.addEventListener("keydown", function(event)  {
             case "ArrowDown":
                 event.preventDefault();
                 ButtonSouth.click();
+                break;
+            case "Enter":
+                event.preventDefault();
+                ButtonContinue.click();
+                break;
+            case "t":
+                event.preventDefault();
+                ButtonUseTorch.click();
+                break;
+            case "T":
+                event.preventDefault();
+                ButtonUseTorch.click();
                 break;
         }
     }

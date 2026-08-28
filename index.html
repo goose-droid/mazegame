@@ -7,7 +7,6 @@
     </head>
     <body>
         <h1>Maze Game</h1>
-        <p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move.</p>
         <main>
             <div id="left-column">
                 <div id="minimap">
@@ -22,13 +21,14 @@
                     <div id="roomstats"></div>
                     <button id="use-torch" disabled>Use torch</button>
                     <div id="torch-count"></div>
-                    <button id="toggle-arrow-keys" disabled>Toggle arrow key input</button>
+                    <button id="toggle-arrow-keys" disabled>Toggle keyboard input</button>
                     <div id="arrow-keys-status"></div>
                 </div>
             </div>
             <div id="right-column">
                 <canvas id="right-canvas" width="210" height="210">This is the extra canvas</canvas>
-                <div id="text"></div> 
+                <div id="text"></div>
+                <button id="continue" disabled>Continue</button> 
             </div>
         </main>
         <div class="hidden">
