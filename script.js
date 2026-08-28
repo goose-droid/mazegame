@@ -189,6 +189,7 @@ function eventLock() {
     locked = true;
     disableButtons();
     ButtonContinue.removeAttribute("disabled");
+    ButtonContinue.classList.remove("hidden");
 }
 
 
@@ -336,6 +337,7 @@ function checkObjects() {
 //lie to the north/south/east/west
 function manageButtons() {
     ButtonContinue.setAttribute("disabled", "disabled");
+    ButtonContinue.classList.add("hidden");
     ButtonToggleArrowKeys.removeAttribute("disabled");
     if (torches > 0) {
         ButtonUseTorch.removeAttribute("disabled");

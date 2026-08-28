@@ -52,3 +52,7 @@ canvas {
 .hidden {
     display: none;
 }
+
+#right-column {
+    max-width: 400px;
+}
