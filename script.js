@@ -229,7 +229,7 @@ function drawTile (type, canvasx, canvasy) {
 //functions for drawing darkness
 function drawFrame() {
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 210, 60);
+    ctx.fillRect(0, 0, 210, 30);
     ctx.fillRect(0, 0, 30, 210);
     ctx.fillRect(180, 0, 30, 210);
     ctx.fillRect(0, 180, 210, 30);

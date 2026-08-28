@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Trade+Winds&display=swap');
+
 body {
     margin-left: 25px;
+    background-color: black;
+    color: white;
 }
 
 main {
     display: flex;
+}
+
+h1 {
+    font-family: 'Trade Winds', display;
 }
 
 #right-canvas {
@@ -23,8 +31,9 @@ main {
         display: inline-block;
     }
     #ButtonNorth, #ButtonSouth {
-        margin-left:25px;
+        margin-left:0px;
     }
+    text-align: center;
 }
 
 #toggle-arrow-keys {
