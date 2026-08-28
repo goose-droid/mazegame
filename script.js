@@ -90,9 +90,15 @@ const ButtonUseTorch = document.querySelector("#use-torch");
 //sprite sheet
 const sheet = document.getElementById("source");
 
+//right images
+const img_key = document.getElementById("key");
+const img_chest = document.getElementById("chest");
+
 //canvas 
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const rightcanvas = document.getElementById("right-canvas");
+const rightctx = rightcanvas.getContext("2d");
 
 //text
 const roomstats = document.querySelector("#roomstats");
@@ -150,6 +156,7 @@ function loadMap(map) {
 function pickup(objectindex) {
     switch (objecttypes[objectindex]){
         case "key":
+            drawRightImage(img_key);
             numberOfKeys++;
             text.innerHTML = "<p>You found a key!<p>";
             text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
@@ -170,6 +177,17 @@ function applySquaresCoords() {
             squaresCoords.push([x+k, y+j]);
         }
     }
+}
+
+//function for clearing right canvas
+function clearRightCanvas() {
+    rightctx.clearRect(0, 0, 210, 210);
+}
+
+//function for drawing image to right canvas
+function drawRightImage(imageName) {
+    clearRightCanvas();
+    rightctx.drawImage(imageName, 0, 0, 210, 210);
 }
 
 //function for drawing sprites to canvas
@@ -211,7 +229,7 @@ function drawTile (type, canvasx, canvasy) {
 //functions for drawing darkness
 function drawFrame() {
     ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 210, 30);
+    ctx.fillRect(0, 0, 210, 60);
     ctx.fillRect(0, 0, 30, 210);
     ctx.fillRect(180, 0, 30, 210);
     ctx.fillRect(0, 180, 210, 30);
@@ -332,8 +350,9 @@ function manageButtons() {
 
 function foundChest(objectindex) {
     text.innerHTML = "<p>You found the treasure chest!<p>";
+    drawRightImage(img_chest);
     if (numberOfKeys < objectinfos[objectindex]) {
-        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${boxKeys} keys to open the box.</p>`;
+        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${objectinfos[objectindex]} keys to open the box.</p>`;
     } else {
         gameover = true;
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
@@ -399,6 +418,7 @@ function scrollBackground (xoffset , yoffset) {
 //basically the main function of the puzzle
 async function updatePosition(direction) {
     disableButtons();
+    clearRightCanvas();
     let yoffset = 0;
     let xoffset = 0;
     switch(direction) {

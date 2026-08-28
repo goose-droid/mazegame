@@ -2,6 +2,14 @@ body {
     margin-left: 25px;
 }
 
+main {
+    display: flex;
+}
+
+#right-canvas {
+    background-color: black;
+}
+
 .directional-buttons {
     button {
         height: 25px;
