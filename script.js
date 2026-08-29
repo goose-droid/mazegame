@@ -486,10 +486,10 @@ async function updatePosition(direction) {
     if (!dark) {
         torchSteps++;
     }
-    if (torchSteps > 60 && torchSteps < 90) {
+    if (torchSteps > 80 && torchSteps < 130) {
         lessDark = true;
     }
-    if (torchSteps > 89) {
+    if (torchSteps > 129) {
         lessDark = false;
         dark = true;
         torchSteps = 0;
