@@ -95,7 +95,12 @@ const sheet = document.getElementById("source");
 
 //right images
 const img_key = document.getElementById("key");
-const img_chest = document.getElementById("chest");
+const img_chest00 = document.getElementById("chest00");
+const img_chest01 = document.getElementById("chest01");
+const img_chest02 = document.getElementById("chest02");
+const img_chest03 = document.getElementById("chest03");
+const img_chest04 = document.getElementById("chest04");
+const img_chestopen = document.getElementById("chestopen");
 
 //canvas 
 const canvas = document.getElementById("canvas");
@@ -366,7 +371,28 @@ function manageButtons() {
 
 function foundChest(objectindex) {
     text.innerHTML = "<p>You found the treasure chest!<p>";
-    drawRightImage(img_chest);
+    switch(numberOfKeys) {
+        case 0:
+            drawRightImage(img_chest00);
+            break;
+        case 1:
+            drawRightImage(img_chest01);
+            break;
+        case 2:
+            drawRightImage(img_chest02);
+            break;
+        case 3:
+            drawRightImage(img_chest03);
+            break;
+        case 4:
+            drawRightImage(img_chest04);
+            break;
+        case 5:
+            drawRightImage(img_chestopen);
+            break;
+        default:
+            break;
+    }
     if (numberOfKeys < objectinfos[objectindex]) {
         //eventLock();
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${objectinfos[objectindex]} keys to open the box.</p>`;
@@ -460,10 +486,10 @@ async function updatePosition(direction) {
     if (!dark) {
         torchSteps++;
     }
-    if (torchSteps > 40 && torchSteps < 71) {
+    if (torchSteps > 60 && torchSteps < 90) {
         lessDark = true;
     }
-    if (torchSteps > 70) {
+    if (torchSteps > 89) {
         lessDark = false;
         dark = true;
         torchSteps = 0;
