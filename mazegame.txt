@@ -1,6 +1,1 @@
-[Maze]
-Maze array -- data for maze. includes initial map and starting coords.
-Map Layout Arrays -- background tile/layout info. first row contains name, dimensions. second row has ojbect locations. third row has object type + maze unique index. rest is sliced as map.
-Object arrays -- array for each object type, with each instance of an object type across maps. index matches index in map layout array
-starting coordinates no longer stored in map data, but passed in when loading map. dependent on exit type object data.
 
