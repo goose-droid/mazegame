@@ -1,4 +1,5 @@
-By this time of night, the swamp is lit only by the moon and the occasional firefly. Good thing you have a lamp. You also have a hiking stick, good for testing the ground in front of you. Your adventure would come to a quick end if you make a misstep. You swat at a couple of mosquitos before pressing forward.
-
-----
-
+[Maze]
+Maze array -- data for maze. includes initial map and starting coords.
+Map Layout Arrays -- background tile/layout info. first row contains name, dimensions. second row has ojbect locations. third row has object type + maze unique index. rest is sliced as map.
+Object arrays -- array for each object type, with each instance of an object type across maps. index matches index in map layout array
+starting coordinates no longer stored in map data, but passed in when loading map. dependent on exit type object data.
