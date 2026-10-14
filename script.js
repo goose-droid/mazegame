@@ -1,32 +1,32 @@
 // *******************************************************
-// ************* map data ****************
+// ************* maze data ****************
 // *******************************************************
+//maze-wide consts
+const startingmap = originalmaze;
+const startingcoords = [1, 28];
 
+// map data
 // first array contains the width of the map (eg. number of arrays),
 // the height of the map (eg. number of items in each array),
 // the default tile (for borders), and the map name.
 // then there are a series of arrays connected by index, covering
 // object info. the first array is object coordinates,
-// the second array is object type, the third array is
-// necessary data for the object, if applicable.
-// the fourth array defines the object's sprite
+// the second array is object type and index
 // the first object is always the start coordinates
 // (for boxes, the number of keys needed to open, and
 // for warps, the warp destination)
 // once the layout is sliced, the index of the outer array is x
 // the indices of the inner arrays are y
 // the elements in the inner arrays are tiles
-// 0 = wall, 1 = path, 2 = water, 3 = stairs (path for now),
+// 0 = wall, 1 = path, 2 = water, 3 = stairs down (path for now),
 // 4 = unused (wall for now), 5 = warp, 6 = unused (wall for now),
-// 7 = mossy floor, 8 = unused (wall), 9 = grass
+// 7 = mossy floor, 8 = unused (wall), 9 = stairs up (path for now)
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
 const originalmaze = [
     [30, 30, "wall", "Original Maze"],
-    [ [1, 28], [16, 25], [4, 24],[3, 1], [12, 11], [25, 1], [27, 21], [3, 11], [27, 27]],
-    [ "start", "box", "key", "key", "key", "key", "key", "warp", "warp"],
-    [ null, 5, null, null, null, null, null, [27, 27], [3, 11]],
-    [ null, "box", "key", "key", "key", "key", "key", null, null],
+    [ [16, 25], [4, 24],[3, 1], [12, 11], [25, 1], [27, 21], [3, 11], [27, 27]],
+    [ ["box", 0], ["key", 0], ["key", 1], ["key", 2] ["key", 3], ["key", 4], ["warp", 0], ["warp", 1] ],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 3, 0],
     [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
@@ -60,7 +60,24 @@ const originalmaze = [
 ];
 
 
-// *** end map definition
+
+//object arrays
+//first element is always the sprite (or lack thereof)
+//these are universal across maps for same maze.
+
+//chest array. second element: # of keys needed to open
+
+const chestIndex = ["box", 5]
+
+// key array.
+// only object table where a single instance does not have its own array
+const keyIndex = ["key", "key", "key", "key", "key"];
+
+//warp array. second element is warp location (on same map)
+const warpIndex = [
+[null, [27, 27]],
+[null, [3, 11]]
+];
 
 // *******************************************************
 // ************* global variables/constants **************
@@ -130,18 +147,16 @@ let mapheight = 0;
 let defaulttile = "wall";
 let locked = false;
 
-const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
+const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "path"];
 
 
 // *******************************************************
 // ********************* functions  **********************
 // *******************************************************
 
-function loadMap(map) {
-    //slice layout
-    tiles = map.slice(-1 * (map[0][0]));
-    console.log(tiles);
 
+function loadMap(map, startx, starty) {
+    
     //map width, height, name
     mapwidth = map[0][0];
     mapheight = map[0][1];
@@ -152,15 +167,19 @@ function loadMap(map) {
     console.log(defaulttile);
     console.log(mapname);
 
+    //slice layout
+    tiles = map.slice(-1 * mapwidth);
+    console.log(tiles);
+
+    //set starting coords
+    x = startx;
+    y = starty;
+
     //slice object arrays
     objectcoords = map[1];
     objecttypes = map[2];
-    objectinfos = map[3];
-    objectsprites = map[4];
     console.log(objectcoords);
     console.log(objecttypes);
-    console.log(objectinfos);
-    console.log(objectsprites);
 }
 
 // removing pickup objects from objecttypes array
@@ -528,7 +547,7 @@ async function updatePosition(direction) {
 
 //start up sequence
 
-loadMap(originalmaze);
+loadMap(startingmap, startingcoords[0], startingcoords[1]);
 
 //set starting position
 x = objectcoords[0][0];
