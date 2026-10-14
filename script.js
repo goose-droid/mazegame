@@ -282,7 +282,7 @@ function drawBackground(xoffset, yoffset) {
         for (let k = 0; k < 7; k++) {
             //check if off border of map
             if (squaresCoords[j][0] > mapwidth - 1 || squaresCoords[j][0] < 0 || squaresCoords[j][1] > mapheight - 1 || squaresCoords[j][1] < 0) {
-                console.log(`off map i:${i} k:${k} squarescoords[j][0]: ${squaresCoords[j][0]} squarescoords[j][1]: ${squaresCoords[j][1]}`);
+                //console.log(`off map i:${i} k:${k} squarescoords[j][0]: ${squaresCoords[j][0]} squarescoords[j][1]: ${squaresCoords[j][1]}`);
                 drawTile(defaulttile, (30 * k) + xoffset, (30 * i) + yoffset);
             } else {
 
