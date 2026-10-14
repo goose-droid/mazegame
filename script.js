@@ -140,7 +140,6 @@ let squaresCoords = [];
 let tiles = [];
 let objectcoords = [];
 let objecttypes = [];
-let objectinfos = [];
 let mapname = "default";
 let mapwidth = 0;
 let mapheight = 0;
@@ -154,6 +153,11 @@ const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall",
 // ********************* functions  **********************
 // *******************************************************
 
+function creaateDisappearingObjectsFlags() {
+    for (let i = 0; i < keyIndex.length + 1; i++) {
+        keyFlags.push(1);
+    }
+}
 
 function loadMap(map, startx, starty) {
     
