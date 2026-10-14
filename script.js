@@ -189,20 +189,21 @@ function loadMap(map, startx, starty) {
 // removing pickup objects from objecttypes array
 // so they can't be picked up more than once
 function pickup(objectindex) {
-    switch (objecttypes[objectindex]){
+    switch (objecttypes[objectindex][0]){
         case "key":
+            if (keyFlags[objectypes[objectindex][1]]) {
             //eventLock();
             drawRightImage(img_key);
             numberOfKeys++;
+            keyFlags[objectypes[objectindex][1]] = 0;
             text.innerHTML = "<p>You found a key!<p>";
             text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
+            }
             break;
         default:
             alert("error: picked up item type without switch case in pickup()");
             break;
     }
-    objecttypes.splice(objectindex, 1, null);
-    objectcoords.splice(objectindex, 1, [100, 100]); //has to be coordinates or findIndex doesn't work later
 }
 
 //function to set up squaresCoords
@@ -315,8 +316,12 @@ function drawBackground(xoffset, yoffset) {
                 //apply object sprites if applicable
                 let objectindex = objectcoords.findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
                 if (objectindex != -1) {
-                    if (objectsprites[objectindex]) {
-                        drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
+                    if (objecttypes[objectindex][0] == "key") {
+                        if (keyFlags[[objectypes[objectindex][1]]]) {
+                        drawTile(keyIndex[objecttypes[objectindex][1]]), (30 * k)  + xoffset, (30 * i)  + yoffset);
+                        }
+                    } else {
+                        switch
                     }
                 }
 
