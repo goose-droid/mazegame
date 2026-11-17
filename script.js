@@ -86,6 +86,9 @@ const ButtonContinue = document.querySelector("#continue");
 //sprite sheet
 const sheet = document.getElementById("source");
 
+//temp person sprite
+const character = document.getElementById("character");
+
 //right images
 const img_key = document.getElementById("key");
 const img_chest00 = document.getElementById("chest00");
@@ -231,7 +234,7 @@ function drawTile (type, canvasx, canvasy) {
       ctx.drawImage(sheet, 0, 30, 30, 30, canvasx, canvasy, 30, 30);
       break;
     case "person":
-      ctx.drawImage(sheet, 30, 30, 30, 30, canvasx, canvasy, 30, 30);
+      ctx.drawImage(character, canvasx, canvasy);
       break;
     case "key":
       ctx.drawImage(sheet, 60, 30, 30, 30, canvasx, canvasy, 30, 30);
