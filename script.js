@@ -122,7 +122,7 @@ const rightcanvas = document.getElementById("right-canvas");
 const rightctx = rightcanvas.getContext("2d");
 
 //text
-const roomstats = document.querySelector("#roomstats");
+const locationdisplay = document.querySelector("#location");
 const text = document.querySelector("#text");
 const keysText = document.querySelector("#arrow-keys-status");
 const torchText = document.querySelector("#torch-count");
@@ -174,6 +174,9 @@ function loadMap(map, startx, starty) {
     //set starting position
     x = startx;
     y = starty;
+
+    //display location
+    displayLocation();
 
     tileClassNames = [];
     tileClassNames = map[1];
@@ -351,10 +354,10 @@ function drawChara() {
 }
 
 //for testing
-function displayRoomData() {
-    if (testing) {
-        roomstats.innerHTML = `<p>Coordinates: ${x}, ${y}<br>Tile type: ${tileClassNames[tiles[x][y]]}</p>`;     
-    };
+function displayLocation() {
+
+    locationdisplay.innerHTML = `<p>Location: ${mapname}</p>`;     
+   
 }
 
 function checkObjects() {
@@ -547,9 +550,6 @@ async function updatePosition(direction) {
     applySquaresCoords();
     const message = await scrollBackground(xoffset, yoffset);
     console.log(message);
-    //drawBackground(0, 0);
-    //objectImage.src = "person.png";
-    displayRoomData();
     //clear textbox and right canvas
     clearRightCanvas();
     text.innerHTML = "";
@@ -574,8 +574,6 @@ loadMap(groundfloor, 1, 8);
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
-
-displayRoomData();
 
 keysText.innerHTML = "Keyboard input disabled";
 torchText.innerHTML = `Torches left: ${torches}`;
