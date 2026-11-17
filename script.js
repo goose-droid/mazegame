@@ -1,18 +1,12 @@
 // *******************************************************
-// ************* map data ****************
+// ************* global variables/constants **************
 // *******************************************************
+
+//Map
 
 // first array contains the width of the map (eg. number of arrays),
 // the height of the map (eg. number of items in each array),
-// the default tile (for borders), and the map name.
-// then there are a series of arrays connected by index, covering
-// object info. the first array is object coordinates,
-// the second array is object type, the third array is
-// necessary data for the object, if applicable.
-// the fourth array defines the object's sprite
-// the first object is always the start coordinates
-// (for boxes, the number of keys needed to open, and
-// for warps, the warp destination)
+// the default tile (for borders), the map name, and the map ID.
 // once the layout is sliced, the index of the outer array is x
 // the indices of the inner arrays are y
 // the elements in the inner arrays are tiles
@@ -22,11 +16,7 @@
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
 const originalmaze = [
-    [30, 30, "wall", "Original Maze"],
-    [ [1, 28], [16, 25], [4, 24],[3, 1], [12, 11], [25, 1], [27, 21], [3, 11], [27, 27]],
-    [ "start", "box", "key", "key", "key", "key", "key", "warp", "warp"],
-    [ null, 5, null, null, null, null, null, [27, 27], [3, 11]],
-    [ null, "box", "key", "key", "key", "key", "key", null, null],
+    [30, 30, "wall", "Original Maze", 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 3, 0],
     [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
@@ -59,12 +49,28 @@ const originalmaze = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
+// Maze objects
 
-// *** end map definition
+//table of objects in maze. index is map id
+let objectcoords = [
+    [ [16, 25], [4, 24],[3, 1], [12, 11], [25, 1], [27, 21], [3, 11], [27, 27] ]
+]
 
-// *******************************************************
-// ************* global variables/constants **************
-// *******************************************************
+//object type. main index is map id, inner indices same as in objects array
+let objecttypes = [
+    [  "box", "key", "key", "key", "key", "key", "warp", "warp" ]
+]
+
+let objectinfos = [
+    [ 5, null, null, null, null, null, [27, 27], [3, 11]  ]
+]
+
+let objectsprites = [
+    [ "box", "key", "key", "key", "key", "key", null, null ]
+]
+
+
+
 
 //creating constants for document elements
 
@@ -124,14 +130,12 @@ let boxKeys = 0;
 let keyFlags = [];
 let squaresCoords = [];
 let tiles = [];
-let objectcoords = [];
-let objecttypes = [];
-let objectinfos = [];
 let mapname = "default";
 let mapwidth = 0;
 let mapheight = 0;
 let defaulttile = "wall";
 let locked = false;
+let mapid = -1;
 
 const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
 
@@ -140,7 +144,7 @@ const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall",
 // ********************* functions  **********************
 // *******************************************************
 
-function loadMap(map) {
+function loadMap(map, startx, starty) {
     //slice layout
     tiles = map.slice(-1 * (map[0][0]));
     console.log(tiles);
@@ -149,12 +153,18 @@ function loadMap(map) {
     mapwidth = map[0][0];
     mapheight = map[0][1];
     mapname = map[0][3];
+    mapid = map[0][4];
     defaulttile = map[0][2]
     console.log(mapwidth);
     console.log(mapheight);
     console.log(defaulttile);
     console.log(mapname);
 
+    //set starting position
+    x = startx;
+    y = starty;
+
+    /*
     //slice object arrays
     objectcoords = map[1];
     objecttypes = map[2];
@@ -163,13 +173,13 @@ function loadMap(map) {
     console.log(objectcoords);
     console.log(objecttypes);
     console.log(objectinfos);
-    console.log(objectsprites);
+    console.log(objectsprites);*/
 }
 
 // removing pickup objects from objecttypes array
 // so they can't be picked up more than once
 function pickup(objectindex) {
-    switch (objecttypes[objectindex]){
+    switch (objecttypes[mapid][objectindex]){
         case "key":
             //eventLock();
             drawRightImage(img_key);
@@ -181,8 +191,8 @@ function pickup(objectindex) {
             alert("error: picked up item type without switch case in pickup()");
             break;
     }
-    objecttypes.splice(objectindex, 1, null);
-    objectcoords.splice(objectindex, 1, [100, 100]); //has to be coordinates or findIndex doesn't work later
+    objecttypes[mapid].splice(objectindex, 1, null);
+    objectcoords[mapid].splice(objectindex, 1, [100, 100]); //has to be coordinates or findIndex doesn't work later
 }
 
 //function to set up squaresCoords
@@ -293,10 +303,10 @@ function drawBackground(xoffset, yoffset) {
                 drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
                 
                 //apply object sprites if applicable
-                let objectindex = objectcoords.findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
+                let objectindex = objectcoords[mapid].findIndex(target => target[0] === squaresCoords[j][0] && target[1] === squaresCoords[j][1]);
                 if (objectindex != -1) {
-                    if (objectsprites[objectindex]) {
-                        drawTile(objectsprites[objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
+                    if (objectsprites[mapid][objectindex]) {
+                        drawTile(objectsprites[mapid][objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
                     }
                 }
 
@@ -329,10 +339,11 @@ function displayRoomData() {
 
 function checkObjects() {
     //see if there is an object at x, y by trying to assign the index for it. 
-    let objectindex = objectcoords.findIndex(target => target[0] === x && target[1] === y);
+    let objectindex = objectcoords[mapid].findIndex(target => target[0] === x && target[1] === y);
     //findIndex returns -1 if target not in array
     if (objectindex != -1){
-        switch(objecttypes[objectindex]) {
+        console.log(objecttypes[mapid][objectindex]);
+        switch(objecttypes[mapid][objectindex]) {
             case "key":
                 pickup(objectindex);
                 break;
@@ -340,8 +351,8 @@ function checkObjects() {
                 foundChest(objectindex);
                 break;
             case "warp":
-                x = objectinfos[objectindex][0];
-                y = objectinfos[objectindex][1];
+                x = objectinfos[mapid][objectindex][0];
+                y = objectinfos[mapid][objectindex][1];
                 applySquaresCoords();
                 drawBackground(0,0);
                 break;
@@ -531,11 +542,7 @@ async function updatePosition(direction) {
 
 //start up sequence
 
-loadMap(originalmaze);
-
-//set starting position
-x = objectcoords[0][0];
-y = objectcoords[0][1];
+loadMap(originalmaze, 1, 28);
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
