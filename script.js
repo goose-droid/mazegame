@@ -576,7 +576,7 @@ loadMap(groundfloor, 1, 8);
 applySquaresCoords();
 
 keysText.innerHTML = "Keyboard input disabled";
-torchText.innerHTML = `Torches left: ${torches}`;
+torchText.innerHTML = `Refills left: ${torches}`;
 
 //draw starting position after spritesheet loads
 window.onload = (event) => {
