@@ -95,6 +95,10 @@ const sheet = document.getElementById("source");
 //temp person sprite
 const character = document.getElementById("character");
 
+//arrow sprites
+const uparrow = document.getElementById("uparrow");
+const downarrow = document.getElementById("downarrow");
+
 //right images
 const img_key = document.getElementById("key");
 const img_chest00 = document.getElementById("chest00");
