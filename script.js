@@ -463,7 +463,7 @@ function disableButtons() {
 function useTorch(){
     torches--;
     torchSteps = 0;
-    torchText.innerHTML = `Torches left: ${torches}`;
+    torchText.innerHTML = `Refills left: ${torches}`;
     if (torches < 1) {
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
@@ -586,7 +586,7 @@ window.onload = (event) => {
     drawBackground(0, 0);
     drawChara();
     eventLock();
-    text.innerHTML = "<p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move. If you toggle on keyboard controls, use the arrow keys to move, the enter key to \"continue\", and t to use a torch.</p>";
+    text.innerHTML = "<p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move. If you toggle on keyboard controls, use the arrow keys to move, the enter key to \"continue\", and L to refill your lamp.</p>";
 }
 
 //button listeners
@@ -653,11 +653,11 @@ document.addEventListener("keydown", function(event)  {
                 event.preventDefault();
                 ButtonContinue.click();
                 break;
-            case "t":
+            case "l":
                 event.preventDefault();
                 ButtonUseTorch.click();
                 break;
-            case "T":
+            case "L":
                 event.preventDefault();
                 ButtonUseTorch.click();
                 break;
