@@ -7,69 +7,76 @@
 // first array contains the width of the map (eg. number of arrays),
 // the height of the map (eg. number of items in each array),
 // the default tile (for borders), the map name, and the map ID.
+// second array is the key for the tile types.
 // once the layout is sliced, the index of the outer array is x
 // the indices of the inner arrays are y
 // the elements in the inner arrays are tiles
-// 0 = wall, 1 = path, 2 = water, 3 = stairs (path for now),
-// 4 = unused (wall for now), 5 = warp, 6 = unused (wall for now),
-// 7 = mossy floor, 8 = unused (wall), 9 = grass
 // evens (incl 0) are impassible, odds are passable
 // kind of visually parsable. north is to the right
-const originalmaze = [
-    [30, 30, "wall", "Original Maze", 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 3, 0],
-    [0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
-    [0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 5, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0],
-    [0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0],
-    [0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0],
-    [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    [0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 1, 0, 7, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    [0, 1, 1, 0, 7, 7, 7, 7, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0],
-    [0, 1, 0, 7, 7, 2, 2, 7, 7, 7, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0],
-    [0, 0, 7, 7, 2, 2, 2, 2, 7, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0],
-    [0, 7, 7, 2, 2, 2, 2, 7, 7, 0, 1, 0, 1, 0, 0, 1, 0, 7, 0, 0, 7, 0, 1, 0, 1, 0, 0, 1, 0, 0],
-    [0, 7, 2, 2, 2, 2, 7, 7, 0, 0, 1, 1, 1, 1, 1, 1, 0, 7, 7, 7, 7, 7, 7, 7, 1, 1, 1, 1, 0, 0],
-    [0, 7, 7, 2, 2, 2, 2, 7, 7, 0, 1, 0, 0, 1, 0, 7, 7, 2, 7 ,2, 2, 2, 7, 0, 0, 1, 0, 1, 1, 0],
-    [0, 0, 7, 7, 2, 2, 2, 2, 7, 7, 7, 0, 0, 1, 7, 0, 7, 7, 7, 7, 2, 2, 7, 7, 0, 1, 0, 1, 0, 0],
-    [0, 1, 0, 7, 7, 2, 2, 7, 7, 0, 7, 7, 7, 0, 7, 0, 2, 2, 2, 7, 7, 7, 2, 7, 0, 1, 1, 1, 1, 0],
-    [0, 1, 1, 0, 7, 7, 7, 7, 0, 0, 1, 0, 7, 2, 7, 2, 2, 2, 7, 7, 2, 7, 2, 7, 0, 1, 2, 1, 2, 0],
-    [0, 0, 1, 1, 0, 0, 7, 0, 1, 0, 1, 0, 7, 2, 7, 7, 7, 2, 2, 2, 2, 7, 2, 7, 7, 1, 2, 5, 2, 0],
-    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 7, 7, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 7, 0, 1, 2, 2, 2, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+const groundfloor = [
+    [13, 13, "wall", "Ground Floor", 0],
+    ["wall", "path", "water", "downarrow", "wall", "warp", "wall", "mossyfloor", "wall", "uparrow", "wall"],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0, 3, 1, 0, 0, 0, 0, 0],
+    [0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 3, 0, 1, 1, 1, 0, 0, 3, 0],
+    [0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 3, 0],
+    [0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 3, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
+
+const basement = [
+    [16, 9, "wall", "Basement", 1],
+    ["wall", "path", "water", "downarrow", "wall", "warp", "wall", "mossyfloor", "wall", "uparrow", "wall"],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 0, 1, 0, 0, 1, 0],
+    [0, 1, 1, 1, 0, 1, 0, 0, 1, 0],
+    [0, 0, 0, 1, 0, 1, 0, 1, 1, 0],
+    [0, 0, 0, 9, 0, 0, 0, 1, 0, 0],
+    [0, 1, 0, 0, 1, 1, 1, 1, 0, 0],
+    [0, 1, 0, 0, 1, 0, 0, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+    [0, 9, 0, 0, 0, 1, 0, 1, 9, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 1, 1, 1, 9, 0],
+    [0, 0, 0, 0, 1, 1, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 9, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
 // Maze objects
 
 //table of objects in maze. index is map id
 let objectcoords = [
-    [ [16, 25], [4, 24],[3, 1], [12, 11], [25, 1], [27, 21], [3, 11], [27, 27] ]
+    [ [6, 6], [9, 6], [9, 1], [2, 6], [6, 4], [6, 11], [9, 11], [11, 8] ],
+    [ [4, 5], [1, 3], [13, 4], [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
 ]
 
 //object type. main index is map id, inner indices same as in objects array
 let objecttypes = [
-    [  "box", "key", "key", "key", "key", "key", "warp", "warp" ]
+    [ "key", "key", "key", "exit", "exit", "exit", "exit", "exit" ],
+    [ "key", "key", "box", "exit", "exit", "exit", "exit", "exit" ]
 ]
 
 let objectinfos = [
-    [ 5, null, null, null, null, null, [27, 27], [3, 11]  ]
+    [ null, null, null, [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
+    [ null, null, null, [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
 ]
 
 let objectsprites = [
-    [ "box", "key", "key", "key", "key", "key", null, null ]
+    [ "key", "key", "key", null, null, null, null, null],
+    [ "key", "key", "box", null, null, null, null, null]
 ]
 
-
+let keysneededtowin = 5;
 
 
 //creating constants for document elements
@@ -140,8 +147,7 @@ let mapheight = 0;
 let defaulttile = "wall";
 let locked = false;
 let mapid = -1;
-
-const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall", "mossyfloor", "wall", "grass"];
+let tileClassNames = [];
 
 
 // *******************************************************
@@ -150,6 +156,7 @@ const tileClassNames = ["wall", "path", "water", "path", "wall", "warp", "wall",
 
 function loadMap(map, startx, starty) {
     //slice layout
+    tiles = [];
     tiles = map.slice(-1 * (map[0][0]));
     console.log(tiles);
 
@@ -168,6 +175,8 @@ function loadMap(map, startx, starty) {
     x = startx;
     y = starty;
 
+    tileClassNames = [];
+    tileClassNames = map[1];
     /*
     //slice object arrays
     objectcoords = map[1];
@@ -259,6 +268,12 @@ function drawTile (type, canvasx, canvasy) {
     case "dark":
         ctx.fillRect(canvasx, canvasy, 30, 30);
         break;
+    case "uparrow":
+        ctx.drawImage(uparrow, canvasx, canvasy);
+        break;
+    case "downarrow":
+        ctx.drawImage(downarrow, canvasx, canvasy);
+        break;
     default:
       ctx.drawImage(sheet, 0, 0, 20, 20, canvasx, canvasy, 30, 30);
       break;
@@ -304,6 +319,7 @@ function drawBackground(xoffset, yoffset) {
             } else {
 
                 //apply map tiles
+                //console.log(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]]);
                 drawTile(tileClassNames[tiles[squaresCoords[j][0]][squaresCoords[j][1]]], (30 * k)  + xoffset, (30 * i)  + yoffset );
                 
                 //apply object sprites if applicable
@@ -357,6 +373,11 @@ function checkObjects() {
             case "warp":
                 x = objectinfos[mapid][objectindex][0];
                 y = objectinfos[mapid][objectindex][1];
+                applySquaresCoords();
+                drawBackground(0,0);
+                break;
+            case "exit":
+                loadMap(objectinfos[mapid][objectindex][0], objectinfos[mapid][objectindex][1], objectinfos[mapid][objectindex][2]);
                 applySquaresCoords();
                 drawBackground(0,0);
                 break;
@@ -422,9 +443,9 @@ function foundChest(objectindex) {
         default:
             break;
     }
-    if (numberOfKeys < objectinfos[objectindex]) {
+    if (numberOfKeys < keysneededtowin) {
         //eventLock();
-        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${objectinfos[objectindex]} keys to open the box.</p>`;
+        text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
     } else {
         gameover = true;
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
@@ -538,6 +559,9 @@ async function updatePosition(direction) {
     if (!gameover && !locked) {
         manageButtons();
     }
+    console.log(mapid);
+    console.log(x);
+    console.log(y);
 }
 
 // *******************************************************
@@ -546,7 +570,7 @@ async function updatePosition(direction) {
 
 //start up sequence
 
-loadMap(originalmaze, 1, 28);
+loadMap(groundfloor, 1, 8);
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
