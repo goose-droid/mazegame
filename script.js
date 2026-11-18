@@ -2,7 +2,9 @@
 // ************* global variables/constants **************
 // *******************************************************
 
-//Map
+//Maps
+
+
 
 // first array contains the width of the map (eg. number of arrays),
 // the height of the map (eg. number of items in each array),
@@ -52,29 +54,31 @@ const basement = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ];
 
+const maps = [groundfloor, basement];
+
 // Maze objects
 
 //table of objects in maze. index is map id
 let objectcoords = [
-    [ [6, 6], [9, 6], [9, 1], [2, 6], [6, 4], [6, 11], [9, 11], [11, 8] ],
-    [ [4, 5], [1, 3], [13, 4], [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
+    [ [2, 6], [6, 4], [6, 11], [9, 11], [11, 8] ],
+    [ [13, 4], [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
 ]
 
 //object type. main index is map id, inner indices same as in objects array
 let objecttypes = [
-    [ "key", "key", "key", "exit", "exit", "exit", "exit", "exit" ],
-    [ "key", "key", "box", "exit", "exit", "exit", "exit", "exit" ]
+    [ "exit", "exit", "exit", "exit", "exit" ],
+    [ "box", "exit", "exit", "exit", "exit", "exit" ]
 ]
 
 //needed extra info for each object
 let objectinfos = [
-    [ null, null, null, [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
-    [ null, null, null, [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
+    [ [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
+    [  null, [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
 ]
 
 let objectsprites = [
-    [ "key", "key", "key", null, null, null, null, null],
-    [ "key", "key", "box", null, null, null, null, null]
+    [  null, null, null, null, null],
+    [ "box", null, null, null, null, null]
 ]
 
 let keysneededtowin = 5;
@@ -149,6 +153,7 @@ let defaulttile = "wall";
 let locked = false;
 let mapid = -1;
 let tileClassNames = [];
+let keylocations = [];
 
 
 // *******************************************************
@@ -166,7 +171,7 @@ function loadMap(map, startx, starty) {
     mapheight = map[0][1];
     mapname = map[0][3];
     mapid = map[0][4];
-    defaulttile = map[0][2]
+    defaulttile = map[0][2];
     console.log(mapwidth);
     console.log(mapheight);
     console.log(defaulttile);
@@ -191,6 +196,38 @@ function loadMap(map, startx, starty) {
     console.log(objecttypes);
     console.log(objectinfos);
     console.log(objectsprites);*/
+}
+
+function generateKeyLocations() {
+    function getRandomHeight(height) {
+        return Math.floor(Math.random() * height);
+    }
+    function getRandomWidth(width) {
+        return Math.floor(Math.random() * width);
+    }
+    mapnumber = maps.length;
+    keyspermap = Math.ceil(keysneededtowin / maps.length);
+    console.log(keyspermap);
+    while (keyspermap > 0) {
+        maps.forEach((map) => {
+            let badcoords = true;
+            let temptiles = [];
+            let temptileclassnames = [];
+            temptiles = map.slice(-1 * (map[0][0]));
+            temptileclassnames = map[1];
+            while (badcoords == true) {
+                let tempx = getRandomWidth(map[0][0]);
+                let tempy = getRandomHeight(map[0][1]);
+                if (temptileclassnames[temptiles[tempx][tempy]] == "path") {
+                    badcoords = false;
+                    keylocations.push([map[0][4], tempx, tempy]);
+                }
+            }
+        });
+        keyspermap--;
+    }
+    console.log(keylocations);
+
 }
 
 // removing pickup objects from objecttypes array
@@ -650,6 +687,8 @@ async function updatePosition(direction) {
 // *******************************************************
 
 //start up sequence
+
+generateKeyLocations();
 
 //load the first map
 loadMap(groundfloor, 1, 8);
