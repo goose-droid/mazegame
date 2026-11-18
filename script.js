@@ -361,7 +361,7 @@ function displayLocation() {
    
 }
 
-function checkObjects() {
+async function checkObjects() {
     //see if there is an object at x, y by trying to assign the index for it. 
     let objectindex = objectcoords[mapid].findIndex(target => target[0] === x && target[1] === y);
     //findIndex returns -1 if target not in array
@@ -381,9 +381,14 @@ function checkObjects() {
                 drawBackground(0,0);
                 break;
             case "exit":
+                disableButtons();
+                const messagefadeout = await fadeout();
+                console.log(messagefadeout);
                 loadMap(objectinfos[mapid][objectindex][0], objectinfos[mapid][objectindex][1], objectinfos[mapid][objectindex][2]);
                 applySquaresCoords();
-                drawBackground(0,0);
+                const messagefadein = await fadein();
+                console.log(messagefadein);
+                manageButtons();
                 break;
             default:
                 console.log("error: no case for this type of object in checkObjects switch");
@@ -462,6 +467,7 @@ function disableButtons() {
     ButtonEast.setAttribute("disabled", "disabled");
     ButtonWest.setAttribute("disabled", "disabled");
     ButtonUseTorch.setAttribute("disabled", "disabled");
+    console.log("buttons disabled");
 }
 
 function useTorch(){
@@ -506,6 +512,76 @@ function scrollBackground (xoffset , yoffset) {
             }
         }       
         requestAnimationFrame(loop);
+    });
+}
+
+function fadeout() {
+
+    let transparency = 1;
+
+    return new Promise((resolve) => {
+        function loop() {
+            ctx.globalAlpha = transparency;
+            ctx.clearRect(0, 0, 210, 210);
+            drawBackground(0, 0);
+            ctx.globalAlpha = 1;
+            drawChara();
+            ctx.globalAlpha = transparency;
+            
+            if (transparency > .5) {
+                transparency = transparency - .02;
+
+            } else {
+                transparency = transparency - .05;
+
+            }
+            console.log(transparency);
+            if (transparency > 0) {
+                setTimeout(() => {
+                    requestAnimationFrame(loop);
+                }, 1000/60);
+            } else {
+                ctx.globalAlpha = 1;
+                drawChara();
+                resolve("fadeoutdone");
+            }
+        }
+        requestAnimationFrame(loop)
+    });
+
+    
+}
+
+function fadein() {
+
+    let transparency = 0;
+
+    return new Promise((resolve) => {
+        function loop() {
+            ctx.globalAlpha = transparency;
+            ctx.clearRect(0, 0, 210, 210);
+            drawBackground(0, 0);
+            ctx.globalAlpha = 1;
+            drawChara();
+            ctx.globalAlpha = transparency;
+            if (transparency > .5) {
+                transparency = transparency + .02;
+  
+            } else {
+                transparency = transparency + .05;
+
+            }
+            if (transparency < 1) {
+                setTimeout(() => {
+                    requestAnimationFrame(loop);
+                }, 1000/60);
+            } else {
+                ctx.globalAlpha = 1;
+
+                resolve("fadeindone");
+            }
+        }
+        requestAnimationFrame(loop)
     });
 }
 
@@ -554,8 +630,6 @@ async function updatePosition(direction) {
     //clear textbox and right canvas
     clearRightCanvas();
     text.innerHTML = "";
-   //check for objects
-    checkObjects();
     drawChara();
     if (!gameover && !locked) {
         manageButtons();
@@ -563,6 +637,7 @@ async function updatePosition(direction) {
     console.log(mapid);
     console.log(x);
     console.log(y);
+    checkObjects();
 }
 
 // *******************************************************
