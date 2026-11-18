@@ -66,6 +66,7 @@ let objecttypes = [
     [ "key", "key", "box", "exit", "exit", "exit", "exit", "exit" ]
 ]
 
+//needed extra info for each object
 let objectinfos = [
     [ null, null, null, [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
     [ null, null, null, [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
