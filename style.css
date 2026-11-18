@@ -21,6 +21,13 @@ body {
 main {
     display: flex;
 
+
+}
+
+#rightimage {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .flex {
