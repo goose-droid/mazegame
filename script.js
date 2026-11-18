@@ -61,24 +61,24 @@ const maps = [groundfloor, basement];
 //table of objects in maze. index is map id
 let objectcoords = [
     [ [2, 6], [6, 4], [6, 11], [9, 11], [11, 8] ],
-    [ [13, 4], [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
+    [ [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
 ]
 
 //object type. main index is map id, inner indices same as in objects array
 let objecttypes = [
     [ "exit", "exit", "exit", "exit", "exit" ],
-    [ "box", "exit", "exit", "exit", "exit", "exit" ]
+    [ "exit", "exit", "exit", "exit", "exit" ]
 ]
 
 //needed extra info for each object
 let objectinfos = [
     [ [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
-    [  null, [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
+    [ [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
 ]
 
 let objectsprites = [
     [  null, null, null, null, null],
-    [ "box", null, null, null, null, null]
+    [  null, null, null, null, null]
 ]
 
 let keysneededtowin = 5;
@@ -154,6 +154,7 @@ let locked = false;
 let mapid = -1;
 let tileClassNames = [];
 let keylocations = [];
+let chestlocation = [];
 
 
 // *******************************************************
@@ -206,8 +207,11 @@ function generateKeyLocations() {
         return Math.floor(Math.random() * width);
     }
     mapnumber = maps.length;
+    function getRandomMap() {
+        return maps[Math.floor(Math.random() * mapnumber)];
+    }
     keyspermap = Math.ceil(keysneededtowin / maps.length);
-    console.log(keyspermap);
+    //console.log(keyspermap);
     while (keyspermap > 0) {
         maps.forEach((map) => {
             let badcoords = true;
@@ -218,7 +222,7 @@ function generateKeyLocations() {
             while (badcoords == true) {
                 let tempx = getRandomWidth(map[0][0]);
                 let tempy = getRandomHeight(map[0][1]);
-                if (temptileclassnames[temptiles[tempx][tempy]] == "path") {
+                if (temptileclassnames[temptiles[tempx][tempy]] == "path" || temptileclassnames[temptiles[tempx][tempy]] == "mossyfloor") {
                     badcoords = false;
                     keylocations.push([map[0][4], tempx, tempy]);
                 }
@@ -226,7 +230,26 @@ function generateKeyLocations() {
         });
         keyspermap--;
     }
-    console.log(keylocations);
+    let badcoords = true;
+    let chestmap = getRandomMap();
+    let temptiles = [];
+    temptiles = chestmap.slice(-1 * (chestmap[0][0]));
+    let temptileclassnames = [];
+    temptileclassnames = chestmap[1];
+    while (badcoords == true) {
+        let tempx = getRandomWidth(chestmap[0][0]);
+        let tempy = getRandomHeight(chestmap[0][1]);
+        if (temptileclassnames[temptiles[tempx][tempy]] == "path" || temptileclassnames[temptiles[tempx][tempy]] == "mossyfloor") {
+            let keyindex = keylocations.findIndex(target => target[0] === chestmap[0][4] && target[1] === tempx && target[tempy] === y);
+            if (keyindex = -1){
+                badcoords = false;
+                chestlocation = [chestmap[0][4], tempx, tempy];
+            }
+        }
+    }
+
+
+    //console.log(keylocations);
 
 }
 
@@ -385,6 +408,10 @@ function drawBackground(xoffset, yoffset) {
                 if (keyindex != -1) {
                     drawTile("key", (30 * k) + xoffset, (30 * i) + yoffset);
                 }
+                //apply chest sprite if applicable
+                if (chestlocation[0] == mapid && chestlocation[1] == squaresCoords[j][0] && chestlocation[2] == squaresCoords[j][1]) {
+                    drawTile("box", (30 * k) + xoffset, (30 * i) + yoffset);
+                }
 
             }
 
@@ -453,6 +480,12 @@ function checkKeys(){
     let keyindex = keylocations.findIndex(target => target[0] === mapid && target[1] === x && target[2] === y);
     if (keyindex != -1) {
         pickupkey(keyindex);
+    }
+}
+
+function checkChest() {
+    if (chestlocation[0] == mapid && chestlocation[1] == x && chestlocation[2] == y) {
+        foundChest();
     }
 }
 
@@ -708,6 +741,7 @@ async function updatePosition(direction) {
     console.log(x);
     console.log(y);
     checkKeys();
+    checkChest();
     checkObjects();
 }
 
