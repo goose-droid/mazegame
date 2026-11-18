@@ -457,6 +457,7 @@ function foundChest(objectindex) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
     } else {
         gameover = true;
+        disableButtons();
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
     }
 }
@@ -493,12 +494,16 @@ function scrollBackground (xoffset , yoffset) {
 
             if (xoffset > 0) {
                 xoffset--;
+                xoffset--;
             } else if (xoffset < 0) {
+                xoffset++;
                 xoffset++;
             }
             if (yoffset > 0) {
                 yoffset--;
+                yoffset--;
             } else if (yoffset < 0) {
+                yoffset++;
                 yoffset++;
             }
 
@@ -529,10 +534,10 @@ function fadeout() {
             ctx.globalAlpha = transparency;
             
             if (transparency > .5) {
-                transparency = transparency - .02;
+                transparency = transparency - .03;
 
             } else {
-                transparency = transparency - .05;
+                transparency = transparency - .06;
 
             }
             console.log(transparency);
@@ -565,10 +570,10 @@ function fadein() {
             drawChara();
             ctx.globalAlpha = transparency;
             if (transparency > .5) {
-                transparency = transparency + .02;
+                transparency = transparency + .03;
   
             } else {
-                transparency = transparency + .05;
+                transparency = transparency + .06;
 
             }
             if (transparency < 1) {
