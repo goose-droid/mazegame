@@ -551,6 +551,8 @@ function foundChest(objectindex) {
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
     } else {
         text.innerHTML += `<p>Using ${keysneededtowin} keys, you opened the box and found a great treasure! You won the game with ${torches} refills remaining and collected ${numberOfKeys - keysneededtowin} extra keys.`
+        gameover = true;
+        disableButtons();
     }
 }
 
@@ -566,7 +568,7 @@ function disableButtons() {
 function useTorch(){
     torches--;
     torchSteps = 0;
-    torchText.innerHTML = `Refills left: ${torches}`;
+    torchText.innerHTML = `<p>Refills left: ${torches}</p>`;
     if (torches < 1) {
         ButtonUseTorch.setAttribute("disabled", "disabled");
     };
@@ -753,8 +755,8 @@ loadMap(groundfloor, 1, 8);
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
 
-keysText.innerHTML = "Keyboard input disabled";
-torchText.innerHTML = `Refills left: ${torches}`;
+keysText.innerHTML = "<p>Keyboard input disabled</p>";
+torchText.innerHTML = `<p>Refills left: ${torches}</p>`;
 
 //draw starting position after spritesheet loads
 window.onload = (event) => {
@@ -790,10 +792,10 @@ ButtonUseTorch.addEventListener("click", () => {
 ButtonToggleArrowKeys.addEventListener("click", () => {
     if (arrowKeys) {
         arrowKeys = false;
-        keysText.innerHTML = "Keyboard input disabled";
+        keysText.innerHTML = "<p>Keyboard input disabled</p>";
     } else {
         arrowKeys = true;
-        keysText.innerHTML = "Keyboard input enabled";
+        keysText.innerHTML = "<p>Keyboard input enabled</p>";
     }
 })
 

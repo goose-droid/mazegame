@@ -6,31 +6,40 @@
         <link href="style.css" rel="stylesheet" />
     </head>
     <body>
-        <h1>Maze Game</h1>
-        <main>
-            <div id="left-column">
-                <div id="minimap">
-                    <canvas id="canvas" width="210" height="210">This is the game canvas.</canvas> 
-                </div>
-                <div id="buttons area">
-                    <div class="directional-buttons">
-                        <button id="ButtonNorth" disabled>↑</button><br>
-                        <button id="ButtonWest">←</button><div class="center-square"></div><button id="ButtonEast" disabled>→</button><br>
-                        <button id="ButtonSouth" disabled>↓</button>
+        <div id="wrapper">
+            <h1>Maze Game</h1>
+            <main>
+                <div id="left-column">
+                    <div id="minimap">
+                        <canvas id="canvas" width="210" height="210">This is the game canvas.</canvas> 
                     </div>
-                    <div id="location"></div>
-                    <button id="use-torch" disabled>Refill <u>L</u>amp</button>
-                    <div id="torch-count"></div>
-                    <button id="toggle-arrow-keys">Toggle keyboard input</button>
-                    <div id="arrow-keys-status"></div>
+                    <div id="buttonsarea">
+                        <div id="location"></div>
+                        <div id="main-buttons">
+                            <div id="torch-stuff">
+                                <div>
+                                    <button id="use-torch" class="fullbutton" disabled>Refill <u>L</u>amp</button><div id="torch-count"></div>
+                                </div>
+                                <div class="flex">
+                                    <button id="toggle-arrow-keys" class="fullbutton" >Toggle keyboard input</button><div id="arrow-keys-status"></div>
+                                </div>
+                            </div>
+                            <div class="directional-buttons">
+                                <button id="ButtonNorth" disabled>↑</button><br>
+                                <button id="ButtonWest">←</button><div class="center-square"></div><button id="ButtonEast" disabled>→</button><br>
+                                <button id="ButtonSouth" disabled>↓</button>
+                            </div>
+                        </div>
+                        
+                    </div>
                 </div>
-            </div>
-            <div id="right-column">
-                <canvas id="right-canvas" width="210" height="210">This is the extra canvas</canvas>
-                <div id="text"></div>
-                <button id="continue" class="hidden" disabled>Continue</button> 
-            </div>
-        </main>
+                <div id="right-column">
+                    <canvas id="right-canvas" width="210" height="210">This is the extra canvas</canvas>
+                    <div id="text"></div>
+                    <button id="continue" class="hidden fullbutton" disabled>Continue</button> 
+                </div>
+            </main>
+        </div>
         <div class="hidden">
         <img
             id="source"

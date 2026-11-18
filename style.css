@@ -2,18 +2,91 @@
 
 body {
     margin-left: 25px;
-    background-color: black;
+    background-image: url("pattern49.jpg");
     color: white;
     font-family: "Special Elite", monospace;
 }
 
+#wrapper {
+    width: 80%;
+    max-width: 1000px;
+    margin: auto;
+    border: 10px ridge saddlebrown;
+    background-color: black;
+    padding: 20px;
+    padding-top: 5px;
+
+}
+
 main {
     display: flex;
+
+}
+
+.flex {
+    display: flex;
+    flex-direction: column;
+}
+
+p {
+    margin: 0px;
+    padding: 10px 0px;
+}
+
+
+button {
+    all: unset;
+    cursor: pointer;
+    background-color: rgb(206, 160, 99);
+    color:black;
+    border: 5px ridge saddlebrown;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color:rgb(230, 178, 111);
+}
+
+button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+button:disabled {
+    background-color: rgb(151, 134, 112);
+    cursor:default;
+}
+
+.fullbutton {
+    line-height: 35px;
+    height: 35px;
+    width: 200px;
+    font-family: "Special Elite", monospace;
+    font-size: 16px;
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+}
+
+#main-buttons {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+    /*align-items: center;*/
+}
+
+#location {
+    text-align: center;
 }
 
 h1 {
     font-family: 'Rye', serif;
     font-weight: normal;
+    text-align: center;
+    padding-top: 0px;
+    margin-top: 0px;
+    
 }
 
 #right-canvas {
@@ -22,13 +95,13 @@ h1 {
 
 .directional-buttons {
     button {
-        height: 25px;
-        width: 25px;
+        height: 35px;
+        width: 35px;
         margin: 0px;
     }
     .center-square {
         height: 0px;
-        width: 25px;
+        width: 45px;
         margin: 0px;
         display: inline-block;
     }
@@ -36,10 +109,18 @@ h1 {
         margin-left:0px;
     }
     text-align: center;
+    padding-top: 20px;
+    padding-right: 10px;
 }
 
 #toggle-arrow-keys {
     margin: 5px;
+}
+
+#minimap {
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 #use-torch {
@@ -56,5 +137,9 @@ canvas {
 }
 
 #right-column {
-    max-width: 400px;
+    flex: 1;
+}
+
+#left-column {
+    flex: 1;
 }
