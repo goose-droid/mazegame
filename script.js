@@ -571,6 +571,7 @@ async function updatePosition(direction) {
 
 //start up sequence
 
+//load the first map
 loadMap(groundfloor, 1, 8);
 
 //run squarescoords function the first time to set up starting coords
