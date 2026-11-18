@@ -232,6 +232,8 @@ function generateKeyLocations() {
 
 // removing pickup objects from objecttypes array
 // so they can't be picked up more than once
+//currently unused bc only keys are picked up
+/*
 function pickup(objectindex) {
     switch (objecttypes[mapid][objectindex]){
         case "key":
@@ -247,6 +249,14 @@ function pickup(objectindex) {
     }
     objecttypes[mapid].splice(objectindex, 1, null);
     objectcoords[mapid].splice(objectindex, 1, [100, 100]); //has to be coordinates or findIndex doesn't work later
+}*/
+
+function pickupkey(keyindex) {
+    drawRightImage(img_key);
+    numberOfKeys++;
+    text.innerHTML = "<p>You found a key!</p>";
+    text.innerHTML += `<p>You now have ${numberOfKeys} key(s).`;
+    keylocations.splice(keyindex, 1, [100, 100]);
 }
 
 //function to set up squaresCoords
@@ -370,6 +380,11 @@ function drawBackground(xoffset, yoffset) {
                         drawTile(objectsprites[mapid][objectindex], (30 * k)  + xoffset, (30 * i)  + yoffset);
                     }
                 }
+                //apply key sprites if applicable
+                let keyindex = keylocations.findIndex(target => target[0] === mapid && target[1] === squaresCoords[j][0] && target[2] === squaresCoords[j][1]);
+                if (keyindex != -1) {
+                    drawTile("key", (30 * k) + xoffset, (30 * i) + yoffset);
+                }
 
             }
 
@@ -434,6 +449,13 @@ async function checkObjects() {
     }
 }
 
+function checkKeys(){
+    let keyindex = keylocations.findIndex(target => target[0] === mapid && target[1] === x && target[2] === y);
+    if (keyindex != -1) {
+        pickupkey(keyindex);
+    }
+}
+
 //turns buttons on or off depending on what tile types
 //lie to the north/south/east/west
 function manageButtons() {
@@ -486,16 +508,22 @@ function foundChest(objectindex) {
         case 5:
             drawRightImage(img_chestopen);
             break;
+        case 6:
+            drawRightImage(img_chestopen);
         default:
             break;
     }
     if (numberOfKeys < keysneededtowin) {
         //eventLock();
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
-    } else {
+    } else if (numberOfKeys == keysneededtowin) {
         gameover = true;
         disableButtons();
         text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
+    } else if (numberOfKeys > keysneededtowin) {
+        gameover = true;
+        disableButtons();
+        text.innerHTML += `<p>Using ${keysneededtowin} of your keys, you opened the box and found a great treasure! Congrats! You won the game and collected ${numberOfKeys - keysneededtowin} extra keys!`
     }
 }
 
@@ -679,6 +707,7 @@ async function updatePosition(direction) {
     console.log(mapid);
     console.log(x);
     console.log(y);
+    checkKeys();
     checkObjects();
 }
 
