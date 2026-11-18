@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Trade+Winds&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=Special+Elite&display=swap');
 
 body {
     margin-left: 25px;
     background-color: black;
     color: white;
+    font-family: "Special Elite", monospace;
 }
 
 main {
@@ -11,7 +12,8 @@ main {
 }
 
 h1 {
-    font-family: 'Trade Winds', display;
+    font-family: 'Rye', serif;
+    font-weight: normal;
 }
 
 #right-canvas {

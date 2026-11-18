@@ -549,14 +549,8 @@ function foundChest(objectindex) {
     if (numberOfKeys < keysneededtowin) {
         //eventLock();
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
-    } else if (numberOfKeys == keysneededtowin) {
-        gameover = true;
-        disableButtons();
-        text.innerHTML += `<p>Using your ${numberOfKeys} keys, you opened the box and found a great treasure! Congrats! You won the game! Refresh the page to start again.`;
-    } else if (numberOfKeys > keysneededtowin) {
-        gameover = true;
-        disableButtons();
-        text.innerHTML += `<p>Using ${keysneededtowin} of your keys, you opened the box and found a great treasure! Congrats! You won the game and collected ${numberOfKeys - keysneededtowin} extra keys!`
+    } else {
+        text.innerHTML += `<p>Using ${keysneededtowin} keys, you opened the box and found a great treasure! You won the game with ${torches} refills remaining and collected ${numberOfKeys - keysneededtowin} extra keys.`
     }
 }
 
@@ -768,7 +762,7 @@ window.onload = (event) => {
     drawBackground(0, 0);
     drawChara();
     eventLock();
-    text.innerHTML = "<p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move. If you toggle on keyboard controls, use the arrow keys to move, the enter key to \"continue\", and L to refill your lamp.</p>";
+    text.innerHTML = "<p>The goal of this game is to find the treasure chest, plus all the keys needed to open it. Click the directional buttons to move.</p><p>If you toggle on keyboard controls, use the arrow keys to move, the enter key to \"continue\", and L to refill your lamp.</p>";
 }
 
 //button listeners
