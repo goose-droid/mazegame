@@ -62,38 +62,77 @@ const cellar = [
     [0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 0],
     [0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 1, 1, 1, 0, 5, 0, 0, 1, 0, 0, 1, 1, 1, 0],
-    []
+    [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0],
+    [0, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 3, 0, 1, 0, 0, 0, 0, 1, 0],
+    [0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+    [0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0],
+    [0, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0],
+    [0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0],
+    [0, 1, 1, 0, 0, 3, 0, 0, 1, 1, 1, 1, 1, 5, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+];
 
+const caves = [
+    [15, 15, "wall", "Caves", 3],
+    ["wall", "path", "water", "downarrow", "wall", "uparrow"],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 5, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0],
+    [0, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0],
+    [0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 0, 5, 1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0],
+    [0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 0],
+    [0, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 1, 5, 1, 1, 1, 1, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-const maps = [groundfloor, basement];
+const maps = [groundfloor, basement, cellar, caves];
 
 // Maze objects
 
 //table of objects in maze. index is map id
 let objectcoords = [
-    [ [2, 6], [6, 4], [6, 11], [9, 11], [11, 8] ],
-    [ [5, 3], [9, 1], [9, 8], [12, 8], [14, 5] ]
-]
+    [ [1, 10], [10, 7], [8, 13] ],
+    [ [1, 10], [10, 7], [8, 13], [3, 5], [13, 13] ],
+    [ [3, 5], [13, 13], [1, 13], [6, 6], [13, 5] ],
+    [ [1, 13], [6, 6], [13, 5] ]
+];
 
 //object type. main index is map id, inner indices same as in objects array
 let objecttypes = [
+    [ "exit", "exit", "exit" ],
     [ "exit", "exit", "exit", "exit", "exit" ],
-    [ "exit", "exit", "exit", "exit", "exit" ]
-]
+    [ "exit", "exit", "exit", "exit", "exit" ],
+    [ "exit", "exit", "exit", "exit"]
+];
 
 //needed extra info for each object
 let objectinfos = [
-    [ [basement, 5, 3], [basement, 9, 1], [basement, 9, 8], [basement, 12, 8], [basement, 14, 5] ],
-    [ [groundfloor, 2, 6], [groundfloor, 6, 4], [groundfloor, 6, 11], [groundfloor, 9, 11], [groundfloor, 11, 8] ]
-]
+    [ [basement, 1, 10], [basement, 10, 7], [basement, 8, 13] ],
+    [ [groundfloor, 1, 10], [groundfloor, 10, 7], [groundfloor, 8, 13], [cellar, 3, 5], [cellar, 13, 13] ],
+    [ [basement, 3, 5], [basement, 13, 13], [caves, 1, 13], [caves, 6, 6], [caves, 13, 5] ],
+    [ [cellar, 1, 13], [cellar, 6, 6], [cellar, 13, 5] ]
+];
 
 let objectsprites = [
-    [  null, null, null, null, null],
-    [  null, null, null, null, null]
-]
+    [ null, null, null ],
+    [ null, null, null, null, null ],
+    [ null, null, null, null, null ],
+    [ null, null, null ]
+];
 
-let keysneededtowin = 5;
+const keysneededtowin = 5;
+const totalkeys = 8;
+
 
 
 //creating constants for document elements
@@ -152,7 +191,7 @@ let testing = false;
 let arrowKeys = false;
 let dark = true;
 let lessDark = false;
-let torches = 5;
+let torches = 10;
 let torchSteps = 0;
 let gameover = false;
 let y = 0;
@@ -216,36 +255,52 @@ function loadMap(map, startx, starty) {
 }
 
 function generateKeyLocations() {
+
     function getRandomHeight(height) {
         return Math.floor(Math.random() * height);
     }
     function getRandomWidth(width) {
         return Math.floor(Math.random() * width);
     }
+
     mapnumber = maps.length;
+
     function getRandomMap() {
         return maps[Math.floor(Math.random() * mapnumber)];
     }
-    keyspermap = Math.ceil(keysneededtowin / maps.length);
-    //console.log(keyspermap);
-    while (keyspermap > 0) {
-        maps.forEach((map) => {
-            let badcoords = true;
-            let temptiles = [];
-            let temptileclassnames = [];
-            temptiles = map.slice(-1 * (map[0][0]));
-            temptileclassnames = map[1];
+
+    let keysplaced = 0;
+    let maptallies = Array(mapnumber).fill(0);
+
+    while ( keysplaced < totalkeys) {
+        
+        let tempmap = getRandomMap();
+
+        let badcoords = true;
+        let temptiles = [];
+        let temptileclassnames = [];
+        let tempmapid = tempmap[0][4];
+
+        if (maptallies[tempmapid] < 3) {
+
+            temptiles = tempmap.slice(-1 * (tempmap[0][0]));
+            temptileclassnames = tempmap[1];
+
             while (badcoords == true) {
-                let tempx = getRandomWidth(map[0][0]);
-                let tempy = getRandomHeight(map[0][1]);
-                if (temptileclassnames[temptiles[tempx][tempy]] == "path" || temptileclassnames[temptiles[tempx][tempy]] == "mossyfloor") {
+                let tempx = getRandomWidth(tempmap[0][0]);
+                let tempy = getRandomHeight(tempmap[0][1]);
+                if (temptileclassnames[temptiles[tempx][tempy]] == "path") {
                     badcoords = false;
-                    keylocations.push([map[0][4], tempx, tempy]);
+                    keylocations.push([tempmapid, tempx, tempy]);
+                    maptallies[tempmapid]++;
+                    keysplaced++;
                 }
             }
-        });
-        keyspermap--;
+        }
+        
     }
+    console.log(`keysplaced ` + keysplaced);
+
     let badcoords = true;
     let chestmap = getRandomMap();
     let temptiles = [];
@@ -256,14 +311,13 @@ function generateKeyLocations() {
         let tempx = getRandomWidth(chestmap[0][0]);
         let tempy = getRandomHeight(chestmap[0][1]);
         if (temptileclassnames[temptiles[tempx][tempy]] == "path" || temptileclassnames[temptiles[tempx][tempy]] == "mossyfloor") {
-            let keyindex = keylocations.findIndex(target => target[0] === chestmap[0][4] && target[1] === tempx && target[tempy] === y);
-            if (keyindex = -1){
+            let tempkeyindex = keylocations.findIndex(target => target[0] === chestmap[0][4] && target[1] === tempx && target[tempy] === y);
+            if (tempkeyindex == -1){
                 badcoords = false;
                 chestlocation = [chestmap[0][4], tempx, tempy];
             }
         }
     }
-
 
     //console.log(keylocations);
 
@@ -557,16 +611,17 @@ function foundChest(objectindex) {
         case 5:
             drawRightImage(img_chestopen);
             break;
-        case 6:
-            drawRightImage(img_chestopen);
         default:
+            drawRightImage(img_chestopen);
             break;
     }
     if (numberOfKeys < keysneededtowin) {
         //eventLock();
         text.innerHTML += `<p>Unfortunately, you have ${numberOfKeys} key(s), but need ${keysneededtowin} keys to open the box.</p>`;
     } else {
-        text.innerHTML += `<p>Using ${keysneededtowin} keys, you opened the box and found a great treasure! You won the game with ${torches} refills remaining and collected ${numberOfKeys - keysneededtowin} extra keys.`
+        let extrakeys = numberOfKeys - keysneededtowin;
+        let score = (torches) + (2 * extrakeys);
+        text.innerHTML += `<p>Using ${keysneededtowin} keys, you opened the box and found a great treasure! You won the game with ${torches} refills remaining and collected ${extrakeys} extra keys.</p><p>Score: ${score}/16</p><p>To play again, refresh the page. The keys and chest are in a different spot every time!`;
         gameover = true;
         disableButtons();
     }
@@ -731,10 +786,10 @@ async function updatePosition(direction) {
     if (!dark) {
         torchSteps++;
     }
-    if (torchSteps > 80 && torchSteps < 130) {
+    if (torchSteps > 60 && torchSteps < 100) {
         lessDark = true;
     }
-    if (torchSteps > 129) {
+    if (torchSteps > 100) {
         lessDark = false;
         dark = true;
         torchSteps = 0;
@@ -766,7 +821,7 @@ async function updatePosition(direction) {
 generateKeyLocations();
 
 //load the first map
-loadMap(groundfloor, 1, 8);
+loadMap(groundfloor, 7, 1);
 
 //run squarescoords function the first time to set up starting coords
 applySquaresCoords();
