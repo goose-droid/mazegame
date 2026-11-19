@@ -111,6 +111,10 @@ const character = document.getElementById("character");
 const uparrow = document.getElementById("uparrow");
 const downarrow = document.getElementById("downarrow");
 
+//floor and wall sprites
+const path = document.getElementById("path");
+const wall = document.getElementById("wall");
+
 //right images
 const img_key = document.getElementById("key");
 const img_chest00 = document.getElementById("chest00");
@@ -316,10 +320,10 @@ function drawRightImage(imageName) {
 function drawTile (type, canvasx, canvasy) {
    switch (type) {
     case "wall":
-      ctx.drawImage(sheet, 0, 0, 30, 30, canvasx, canvasy, 30, 30);
+      ctx.drawImage(wall, canvasx, canvasy);
       break;
     case "path":
-      ctx.drawImage(sheet, 30, 0, 30, 30, canvasx, canvasy, 30, 30);
+      ctx.drawImage(path, canvasx, canvasy);
       break;
     case "mossyfloor":
       ctx.drawImage(sheet, 60, 0, 30, 30, canvasx, canvasy, 30, 30);
